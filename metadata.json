@@ -1,0 +1,6 @@
+{
+  "name": "BB IMPORT - Tienda Oficial Máquinas Cortadoras Profesionales",
+  "description": "Tienda oficial BB IMPORT de máquinas cortadoras y patilleras de pelo profesionales con pasarela de pago funcional, seguimiento de pedidos en tiempo real y panel de administración.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,465 @@
+import { BundleOffer, GatewaySettings, MediaItem, Order, ProductVariant, Review, StoreContent } from './types';
+
+export const initialMedia: MediaItem[] = [
+  {
+    id: 'media-1',
+    type: 'image',
+    url: '',
+    title: 'Kit Completo EXXTRA TECH Barber BB IMPORT',
+    alt: 'Máquinas de cortar el cabello EXXTRA TECH con 4 peines guía, cable USB, aceite y cepillo de limpieza'
+  },
+  {
+    id: 'media-2',
+    type: 'image',
+    url: '',
+    title: 'Corte Degradado y Fade de Alta Precisión',
+    alt: 'Barbero profesional realizando degradado impecable con máquina patillera inalámbrica'
+  },
+  {
+    id: 'media-3',
+    type: 'image',
+    url: '',
+    title: 'Cuchillas T-Blade Acero Carbono Zero-Gap',
+    alt: 'Detalle del cabezal T-Blade en acero al carbono inoxidable para corte al ras 0mm'
+  },
+  {
+    id: 'media-4',
+    type: 'image',
+    url: '',
+    title: 'Perfilado de Barba, Patillas y Cuello',
+    alt: 'Perfilado nítido al ras sin irritación ni tirones en piel sensible'
+  },
+  {
+    id: 'media-5',
+    type: 'image',
+    url: '',
+    title: 'Estación de Trabajo en Barbería Profesional',
+    alt: 'Presentación premium de la cortadora BB IMPORT en ambiente de barbería'
+  },
+  {
+    id: 'media-6',
+    type: 'image',
+    url: '',
+    title: 'Agarre Ergonómico con Hendidura de Pulgar',
+    alt: 'Cuerpo metálico texturizado antideslizante para largas jornadas sin fatiga'
+  },
+  {
+    id: 'media-7',
+    type: 'image',
+    url: '',
+    title: 'Detalle de Acabado y Cuchilla Autoafilable',
+    alt: 'Tratamiento térmico anti-calentamiento y motor silencioso de 7.000 RPM'
+  }
+];
+
+export const initialVariants: ProductVariant[] = [
+  {
+    id: 'var-black',
+    name: 'Negro Matte (Titanium Black)',
+    colorHex: '#18181B',
+    inStock: true,
+    stockCount: 14,
+    badge: 'MÁS ELEGIDO',
+    imageIdx: 0
+  },
+  {
+    id: 'var-red',
+    name: 'Rojo Carmín (Sport Racing)',
+    colorHex: '#DC2626',
+    inStock: true,
+    stockCount: 6,
+    badge: 'ÚLTIMAS UNIDADES',
+    imageIdx: 1
+  },
+  {
+    id: 'var-blue',
+    name: 'Azul Eléctrico (Deep Ocean)',
+    colorHex: '#2563EB',
+    inStock: true,
+    stockCount: 9,
+    imageIdx: 2
+  },
+  {
+    id: 'var-yellow',
+    name: 'Amarillo Neón (Gold Special Edition)',
+    colorHex: '#EAB308',
+    inStock: true,
+    stockCount: 5,
+    badge: 'EDICIÓN LIMITADA',
+    imageIdx: 3
+  }
+];
+
+export const initialBundles: BundleOffer[] = [
+  {
+    id: 'bundle-1',
+    title: '1x Máquina EXXTRA TECH™ PRO',
+    subtitle: 'Incluye Kit Completo (4 peines + cable USB + aceite + cepillo)',
+    quantity: 1,
+    price: 30000,
+    originalPrice: 51500,
+    discountPercentage: 40,
+    badge: 'OFERTA INDIVIDUAL'
+  },
+  {
+    id: 'bundle-2',
+    title: '2x Máquinas EXXTRA TECH™  (Pack Dúo)',
+    subtitle: 'El favorito de Barberos y Regalos. Ahorras $49.990 extra',
+    quantity: 2,
+    price: 55000,
+    originalPrice: 110000,
+    discountPercentage: 50,
+    popular: true,
+    badge: 'MEJOR VALOR ⭐ (50% OFF)'
+  },
+  {
+    id: 'bundle-3',
+    title: '1x Máquina PRO + Loción post afeitada',
+    subtitle: 'Loción post afeitada profesional para piel sensible, 100ml',
+    quantity: 1,
+    price: 43000,
+    originalPrice: 62500,
+    discountPercentage: 40,
+    badge: 'COMBO PROFESIONAL'
+  }
+];
+
+export const initialStoreContent: StoreContent = {
+  storeName: 'BB IMPORT',
+  tagline: 'Línea de Barbería & Peluquería Profesional',
+  topBannerText: '🚚 ENVÍOS  A TODO EL PAÍS (PAGAS AL RECIBIR) | ⚡ 40% OFF HASTA AGOTAR STOCK | 🔒 COMPRA 100% GARANTIZADA',
+  productTitle: 'Máquina Cortadora y Patillera EXXTRA TECH™ EX5',
+  productSubtitle: 'Corte al ras 0mm, degradados perfectos y perfilado de barba profesional con motor magnético silencioso de 7.000 RPM.',
+  badgeTag: 'N° 1 EN VENTAS PARA BARBEROS',
+  regularPrice: 51500,
+  salePrice: 30000,
+  currencySymbol: '$',
+  currencyCode: 'ARS',
+  urgencyViewers: 34,
+  stockLeft: 8,
+  guaranteeDays: 30,
+  guaranteeTitle: 'Garantía Blindada de 30 Días',
+  guaranteeDescription: 'Prueba la EXXTRA TECH™ en tu casa o barbería. Si no supera tus expectativas de corte, potencia y duración de batería, te devolvemos el 100% de tu dinero sin preguntas.',
+  shippingHeadline: 'Despacho Exprés Inmediato con Seguro de Entrega',
+  shippingSubtext: 'Enviamos a cualquier rincón del país por Correo Argentino / Andreani con código de rastreo en tiempo real.',
+  motorSpecs: 'Motor rotativo turbo de 7.000 RPM con tecnología de torque constante, sin frenarse en cabellos gruesos.',
+  batterySpecs: 'Batería de Iones de Litio de 1500mAh con 200 minutos de uso continuo y carga rápida USB Tipo C.',
+  bladesSpecs: 'Cuchillas T-Blade en Acero al Carbono autoafilables con tratamiento térmico anti-calentamiento.',
+  ergonomicsSpecs: 'Cuerpo aerodinámico texturizado antideslizante con hendidura ergonómica para el pulgar y luz LED indicadora.',
+  boxIncludes: [
+    '1x Máquina Cortadora / Patillera EXXTRA TECH™',
+    '4x Peines Guía de Límite (1.5mm, 3mm, 6mm, 9mm)',
+    '1x Cable de Carga Rápida USB',
+    '1x Cepillo Especial Limpiador de Cerdas Finas',
+    '1x Frasco Gotero de Aceite Lubricante para Cuchillas',
+    
+  ],
+  instagramUrl: 'https://www.instagram.com/bigboss_import/',
+  instagramHandle: '@bigboss_import',
+  facebookUrl: 'https://facebook.com/',
+  facebookPage: '',
+  whatsappNumber: '+54 9 3515 05-6742',
+  supportEmail: 'bigbossimportaciones@gmail.com'
+};
+
+export const initialOrders: Order[] = [
+  {
+    id: 'ord-1001',
+    trackingCode: 'BB-784291',
+    customerName: 'Juan Carlos Gómez',
+    email: 'jc.gomez@gmail.com',
+    phone: '+54 9 11 4821-9932',
+    address: 'Av. Corrientes 3421, Piso 4B',
+    city: 'Buenos Aires (CABA)',
+    postalCode: 'C1193',
+    items: [
+      {
+        productId: 'prod-1',
+        productName: 'Máquina Cortadora EXXTRA TECH™ V2 Pro',
+        variantName: 'Negro Matte (Titanium Black)',
+        quantity: 1,
+        price: 30000,
+        bundleTitle: '1x Máquina EXXTRA TECH™ PRO'
+      }
+    ],
+    subtotal: 30000,
+    shippingCost: 0,
+    total: 30000,
+    paymentMethod: 'contra_entrega',
+    paymentStatus: 'A Cobrar al Entregar',
+    status: 'En Tránsito',
+    createdAt: '2026-09-04T15:30:00.000Z',
+    carrier: 'Andreani',
+    estimatedDelivery: '2026-09-06',
+    externalTrackingNumber: '360000849201948',
+    externalTrackingUrl: 'https://www.andreani.com/#!/informacionEnvio/360000849201948',
+    dispatchDate: '05 Sep 2026',
+    timeline: [
+      {
+        status: 'Pendiente',
+        timestamp: '04 Sep, 15:30',
+        description: 'Orden recibida en sistema BB IMPORT',
+        location: 'Centro Logístico Central'
+      },
+      {
+        status: 'Confirmado',
+        timestamp: '04 Sep, 15:45',
+        description: 'Datos de envío validados y confirmados por WhatsApp',
+        location: 'Oficinas BB IMPORT'
+      },
+      {
+        status: 'En Preparación',
+        timestamp: '04 Sep, 17:20',
+        description: 'Kit embalado, testeado y protegido con burbuja anti-impacto',
+        location: 'Depósito Buenos Aires'
+      },
+      {
+        status: 'En Tránsito',
+        timestamp: '05 Sep, 08:15',
+        description: 'Despachado en unidad de distribución troncal hacia destino',
+        location: 'Centro de Distribución Andreani CABA'
+      }
+    ]
+  },
+  {
+    id: 'ord-1002',
+    trackingCode: 'BB-9921-X',
+    customerName: 'Mariano Silva (Barbería El Galpón)',
+    email: 'mariano.silva@hotmail.com',
+    phone: '+54 9 351 554-1290',
+    address: 'Calle Belgrano 812',
+    city: 'Córdoba Capital',
+    postalCode: 'X5000',
+    items: [
+      {
+        productId: 'prod-1',
+        productName: 'Pack Dúo 2x EXXTRA TECH™ ',
+        variantName: 'Rojo Carmín + Negro Matte',
+        quantity: 2,
+        price: 55000,
+        bundleTitle: '2x Máquinas EXXTRA TECH™  (Pack Dúo)'
+      }
+    ],
+    subtotal: 55000,
+    shippingCost: 0,
+    total: 55000,
+    paymentMethod: 'transferencia',
+    paymentStatus: 'Aprobado',
+    status: 'En Reparto',
+    createdAt: '2026-09-03T11:10:00.000Z',
+    carrier: 'Correo Argentino',
+    estimatedDelivery: '2026-09-05 (Hoy)',
+    externalTrackingNumber: 'SD849201938AR',
+    externalTrackingUrl: 'https://www.correoargentino.com.ar/formularios/e-commerce?id=SD849201938AR',
+    dispatchDate: '04 Sep 2026',
+    timeline: [
+      {
+        status: 'Confirmado',
+        timestamp: '03 Sep, 11:15',
+        description: 'Pago por transferencia verificado con comprobante',
+        location: 'Administración BB IMPORT'
+      },
+      {
+        status: 'En Preparación',
+        timestamp: '03 Sep, 13:00',
+        description: 'Preparación de lote profesional de 2 unidades',
+        location: 'Depósito Central'
+      },
+      {
+        status: 'En Tránsito',
+        timestamp: '04 Sep, 06:40',
+        description: 'En camino a la sucursal de destino en Córdoba',
+        location: 'Ruta 9 - Transporte Andreani'
+      },
+      {
+        status: 'En Reparto',
+        timestamp: '05 Sep, 09:30',
+        description: 'El cartero / repartidor tiene el paquete en la camioneta para entrega',
+        location: 'Córdoba Capital - Zona Centro'
+      }
+    ]
+  },
+  {
+    id: 'ord-1003',
+    trackingCode: 'BB-338190',
+    customerName: 'Lucas Benítez',
+    email: 'lucasb_barber@yahoo.com',
+    phone: '+54 9 341 620-8811',
+    address: 'San Lorenzo 1450',
+    city: 'Rosario, Santa Fe',
+    postalCode: 'S2000',
+    items: [
+      {
+        productId: 'prod-1',
+        productName: 'Máquina EXXTRA TECH™ ',
+        variantName: 'Azul Eléctrico (Deep Ocean)',
+        quantity: 1,
+        price: 30000,
+        bundleTitle: '1x Máquina EXXTRA TECH™ '
+      }
+    ],
+    subtotal: 30000,
+    shippingCost: 0,
+    total: 30000,
+    paymentMethod: 'tarjeta',
+    paymentStatus: 'Aprobado',
+    status: 'Entregado',
+    createdAt: '2026-09-01T18:00:00.000Z',
+    carrier: 'Andreani',
+    estimatedDelivery: '03 Sep 2026',
+    externalTrackingNumber: '36000077123901',
+    externalTrackingUrl: 'https://www.andreani.com/#!/informacionEnvio/36000077123901',
+    dispatchDate: '02 Sep 2026',
+    timeline: [
+      {
+        status: 'Confirmado',
+        timestamp: '01 Sep, 18:05',
+        description: 'Pago con tarjeta Visa aprobado con código de autorización #884920',
+        location: 'Gateway Bancario'
+      },
+      {
+        status: 'En Preparación',
+        timestamp: '02 Sep, 09:10',
+        description: 'Producto preparado y rotulado con remito #1003',
+        location: 'Depósito Central'
+      },
+      {
+        status: 'En Tránsito',
+        timestamp: '02 Sep, 14:30',
+        description: 'Viajando a Rosario',
+        location: 'Centro Logístico'
+      },
+      {
+        status: 'En Reparto',
+        timestamp: '03 Sep, 10:20',
+        description: 'Repartidor en camino al domicilio',
+        location: 'Rosario Centro'
+      },
+      {
+        status: 'Entregado',
+        timestamp: '03 Sep, 13:45',
+        description: 'Entregado en mano al destinatario. Firma recibida.',
+        location: 'Domicilio del Cliente'
+      }
+    ]
+  }
+];
+
+export const initialReviews: Review[] = [
+  {
+    id: 'rev-1',
+    author: 'Martín "Tito" Barber',
+    location: 'Buenos Aires (CABA)',
+    rating: 5,
+    date: 'Hace 2 días',
+    title: 'Increíble potencia y cero tirones, la uso 8 horas al día',
+    comment: 'Tengo mi barbería en Palermo y compré 2 máquinas para probarlas con los cleintes más exigentes. El motor vuela, corta al ras sin cortar la piel y la batería me aguanta casi 4 días con uso moderado. Excelente atención de BB IMPORT.',
+    verifiedBuyer: true,
+    role: 'Barbero Profesional',
+    imageUrl: 'https://images.pexels.com/photos/18503604/pexels-photo-18503604.jpeg'
+  },
+  {
+    id: 'rev-2',
+    author: 'Gonzalo A.',
+    location: 'Córdoba Capital',
+    rating: 5,
+    date: 'Hace 3 días',
+    title: 'Llegó en 24hs y pagué en efectivo en mi puerta',
+    comment: 'Elegí el pago contra entrega porque desconfiaba un poco de comprar online, pero fue 10/10. Llegó por Andreani, revisé que esté la caja con los 4 peines y el aceite y le pagué al repartidor. La máquina es súper pesada y de calidad, nada de plástico barato.',
+    verifiedBuyer: true,
+    imageUrl: 'https://images.pexels.com/photos/18503604/pexels-photo-18503604.jpeg'
+  },
+  {
+    id: 'rev-3',
+    author: 'Facundo D.',
+    location: 'Rosario',
+    rating: 5,
+    date: 'Hace 5 días',
+    title: 'Para perfilar la barba es lo mejor que existe',
+    comment: 'Siempre me costaba dejarme los bordes del cuello y las mejillas prolijos con afeitadoras comunes. La patillera EXXTRA TECH deja una línea como con navaja y no irrita para nada. Vale cada peso.',
+    verifiedBuyer: true,
+    imageUrl: 'https://flow.google.com/project/85a36dd8-3889-4df5-993f-f439c90f9df6/edit/c22a3c3e-0a1c-4084-9f59-4a0ffa2c9515'
+  },
+  {
+    id: 'rev-4',
+    author: 'Ezequiel M.',
+    location: 'Mendoza',
+    rating: 5,
+    date: 'Hace 1 semana',
+    title: 'Compré el pack dúo para mi hermano y para mí',
+    comment: 'Aprovechamos la promo de 2 unidades y nos ahorramos un montón. El color Rojo y el Negro son hermosos en persona, tienen una terminación satinada genial. Muy contento con la compra.',
+    verifiedBuyer: true
+  },
+  {
+    id: 'rev-5',
+    author: 'Agustín Pereyra',
+    location: 'La Plata',
+    rating: 5,
+    date: 'Hace 1 semana',
+    title: 'Silenciosa y no se calienta la cuchilla',
+    comment: 'Muchas patilleras baratas a los 10 minutos hierven en la piel del cliente. Esta mantiene la temperatura baja y el motor no vibra fuerte en la mano. 100% recomendada para colegas peluqueros.',
+    verifiedBuyer: true,
+    role: 'Peluquero Estilista'
+  },
+  {
+    id: 'rev-6',
+    author: 'Claudio V.',
+    location: 'Neuquén',
+    rating: 4,
+    date: 'Hace 2 semanas',
+    title: 'Excelente máquina, el envío demoró un día más por el correo',
+    comment: 'La máquina es una bestia total, tiene un filo impresionante. El correo demoró 72hs en vez de 48hs por el clima acá en el sur, pero la gente de BB IMPORT me atendió rapidísimo por WhatsApp y me pasaron el estado al instante.',
+    verifiedBuyer: true
+  }
+];
+
+export const initialGateways: GatewaySettings = {
+  enableMercadoPago: true,
+  enableCod: true,
+  enableTransfer: true,
+  enableCards: true,
+  mercadoPago: {
+    publicKey: 'APP_USR-7a6b980c-bbimport-prod-2025',
+    accessToken: '',
+    paymentLinkUrl: 'https://mpago.la/2vK8Xqp',
+    mpAliasOrCvu: 'beluula.mp',
+    environment: 'production',
+    installmentsMax: 12
+  },
+  bank: {
+    bankName: 'Banco Galicia',
+    accountHolder: 'BB IMPORT S.R.L.',
+    cbu: '0070327530004092450465',
+    alias: 'RBVILLAR3.GAL',
+    cuit: '23-37066549-4',
+    instructions: 'Transfiere el monto exacto de la orden a nuestro Alias o CBU oficial. Luego envía el comprobante por WhatsApp o súbelo en el formulario para despacho prioritario.'
+  }
+};
+
+export const initialFaqs = [
+  {
+    id: 'faq-1',
+    question: '¿Cómo funciona el Pago Contra Entrega?',
+    answer: 'Es muy sencillo y seguro: completas tu pedido sin ingresar ninguna tarjeta. Nosotros te enviamos el producto por correo expreso y tú le pagas el monto exacto en efectivo al repartidor cuando toque a tu puerta.'
+  },
+  {
+    id: 'faq-2',
+    question: '¿Cuánto demora el envío a mi domicilio?',
+    answer: 'Los despachos se realizan en el día hábil. El tiempo estimado de entrega para Capital y Gran Buenos Aires es de 24 a 48 horas. Para el resto de las provincias del país el tiempo es de 48 a 72 horas hábiles con número de seguimiento en vivo.'
+  },
+  {
+    id: 'faq-3',
+    question: '¿Qué incluye exactamente la caja del producto?',
+    answer: 'La caja oficial incluye: 1 Máquina cortadora EXXTRA TECH™ EX5, 4 peines guía de corte (1.5mm, 3mm, 6mm y 9mm), 1 cable USB de carga rápida, 1 cepillo de limpieza, 1 frasco de aceite lubricante para cuchillas y el manual con garantía oficial de 30 días.'
+  },
+  {
+    id: 'faq-4',
+    question: '¿Sirve tanto para cabello como para barba y cuerpo?',
+    answer: 'Sí, totalmente. Su cuchilla en forma de T con dientes finos de acero al carbono permite cortes al ras de 0mm en cabello, perfilado nítido de barba, bigote, patillas, cejas y depilación corporal sin cortes ni tirones.'
+  },
+  {
+    id: 'faq-5',
+    question: '¿Qué garantía tengo si el producto no me convence?',
+    answer: 'Cuentas con la Garantía BB IMPORT de 30 días. Si la máquina tiene algún desperfecto o no estás 100% satisfecho con su rendimiento, te la cambiamos inmediatamente por una nueva o te reembolsamos tu dinero.'
+  }
+];

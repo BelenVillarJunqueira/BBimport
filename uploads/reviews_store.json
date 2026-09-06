@@ -1,0 +1,67 @@
+[
+  {
+    "id": "rev-1",
+    "author": "Martín \"Tito\" Barber",
+    "location": "Buenos Aires (CABA)",
+    "rating": 5,
+    "date": "Hace 5 días",
+    "title": "Increíble potencia y cero tirones, la uso 8 horas al día",
+    "comment": "Tengo mi barbería en Palermo y compré 2 máquinas para probarlas con los cleintes más exigentes. El motor vuela, corta al ras sin cortar la piel y la batería me aguanta casi 4 días con uso moderado. Excelente atención de BB IMPORT.",
+    "verifiedBuyer": true,
+    "role": "Barbero Profesional",
+    "imageUrl": "https://images.pexels.com/photos/18503604/pexels-photo-18503604.jpeg"
+  },
+  {
+    "id": "rev-2",
+    "author": "Gonzalo A.",
+    "location": "Córdoba Capital",
+    "rating": 5,
+    "date": "Hace 3 días",
+    "title": "Llegó en 24hs y pagué en efectivo en mi puerta",
+    "comment": "Elegí el pago contra entrega porque desconfiaba un poco de comprar online, pero fue 10/10. Llegó por Andreani, revisé que esté la caja con los 4 peines y el aceite y le pagué al repartidor. La máquina es súper pesada y de calidad, nada de plástico barato.",
+    "verifiedBuyer": true,
+    "imageUrl": "/uploads/media-1788723907184-58e66.jpeg"
+  },
+  {
+    "id": "rev-3",
+    "author": "Facundo D.",
+    "location": "Rosario",
+    "rating": 5,
+    "date": "Hace 3 semanas",
+    "title": "Para perfilar la barba es lo mejor que existe",
+    "comment": "Siempre me costaba dejarme los bordes del cuello y las mejillas prolijos con afeitadoras comunes. La patillera EXXTRA TECH deja una línea como con navaja y no irrita para nada. Quedas prolijo y presentable para salir  en poco tiempo y sin necesitar un peluquero.  Vale cada peso.",
+    "verifiedBuyer": true,
+    "imageUrl": "/uploads/media-1788724278073-jofjd.jpeg"
+  },
+  {
+    "id": "rev-4",
+    "author": "Ezequiel M.",
+    "location": "Mendoza",
+    "rating": 5,
+    "date": "Hace 1 semana",
+    "title": "Compré el pack dúo para mi hermano y para mí",
+    "comment": "Aprovechamos la promo de 2 unidades y nos ahorramos un montón. El color Rojo y el Negro son hermosos en persona, tienen una terminación satinada genial. Muy contento con la compra.",
+    "verifiedBuyer": true
+  },
+  {
+    "id": "rev-5",
+    "author": "Agustín Pereyra",
+    "location": "La Plata",
+    "rating": 5,
+    "date": "Hace 2 semana",
+    "title": "Silenciosa y no se calienta la cuchilla",
+    "comment": "Muchas patilleras baratas a los 10 minutos hierven en la piel del cliente. Esta mantiene la temperatura baja y el motor no vibra fuerte en la mano. 100% recomendada para colegas peluqueros.",
+    "verifiedBuyer": true,
+    "role": "Peluquero Estilista"
+  },
+  {
+    "id": "rev-6",
+    "author": "Claudio V.",
+    "location": "Neuquén",
+    "rating": 4,
+    "date": "Hace 1 mes",
+    "title": "Excelente máquina, el envío demoró un día más por el correo",
+    "comment": "La máquina es una bestia total, tiene un filo impresionante. El correo demoró 72hs en vez de 48hs por el clima acá en el sur, pero la gente de BB IMPORT me atendió rapidísimo por WhatsApp y me pasaron el estado al instante.",
+    "verifiedBuyer": true
+  }
+]
