@@ -632,7 +632,7 @@ Cualquier consulta quedamos a tu disposición. ¡Muchas gracias por tu compra!`;
               PANEL ADMIN
             </span>
           </span>
-          <span className="hidden lg:inline text-xs text-emerald-400 font-mono flex items-center gap-1.5">
+          <span className="hidden lg:flex text-xs text-emerald-400 font-mono items-center gap-1.5">
             <Lock className="w-3 h-3" /> Panel Oculto: Inaccesible para clientes
           </span>
         </div>
@@ -825,7 +825,7 @@ Cualquier consulta quedamos a tu disposición. ¡Muchas gracias por tu compra!`;
                       </tr>
                     ) : (
                       filteredOrders.map((ord) => (
-                        <tr key={ord.id} className="hover:bg-white/[0.02] transition-colors">
+                        <tr key={ord.id} className="hover:bg-white/2 transition-colors">
                           <td className="py-3.5 px-4 font-mono font-bold text-amber-400">
                             {ord.trackingCode}
                             <div className="text-[10px] text-zinc-500 font-sans">
@@ -838,7 +838,7 @@ Cualquier consulta quedamos a tu disposición. ¡Muchas gracias por tu compra!`;
                           </td>
                           <td className="py-3.5 px-4">
                             <p className="font-medium text-white">{ord.city}</p>
-                            <p className="text-[10px] text-zinc-500 truncate max-w-[150px]">{ord.address}</p>
+                            <p className="text-[10px] text-zinc-500 truncate max-w-37.5">{ord.address}</p>
                           </td>
                           <td className="py-3.5 px-4">
                             <span className="text-zinc-200 font-medium">
@@ -1120,7 +1120,7 @@ Cualquier consulta quedamos a tu disposición. ¡Muchas gracias por tu compra!`;
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-zinc-400 mb-1 flex items-center gap-1.5">
+                  <label className="text-xs font-bold text-zinc-400 mb-1 flex items-center gap-1.5">
                     <Instagram className="w-3.5 h-3.5 text-pink-400" /> Usuario / Arroba de Instagram
                   </label>
                   <input
