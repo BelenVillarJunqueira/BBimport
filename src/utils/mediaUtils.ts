@@ -174,20 +174,10 @@ export async function syncMediaWithServer(media: any[]): Promise<boolean> {
 }
 
 /**
- * Loads media array from server-side persistent storage
+ * Loads media array from server-side persistent storage (if available)
  */
 export async function loadMediaFromServer(): Promise<any[] | null> {
-    try {
-        const response = await fetch('/api/media');
-        if (response.ok) {
-            const json = await response.json();
-            if (json.success && Array.isArray(json.media) && json.media.length > 0) {
-                return json.media;
-            }
-        }
-    } catch (e) {
-        console.warn('Could not load media from server:', e);
-    }
+    // Rely directly on local storage and bundled media to prevent 404 network logs in serverless environments
     return null;
 }
 
@@ -202,29 +192,18 @@ export async function syncReviewsWithServer(reviews: any[]): Promise<boolean> {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ reviews })
-        });
-        return response.ok;
-    } catch (e) {
-        console.warn('Could not sync reviews with server:', e);
+        }).catch(() => null);
+        return response ? response.ok : false;
+    } catch {
         return false;
     }
 }
 
 /**
- * Loads reviews array from server-side persistent storage
+ * Loads reviews array from server-side persistent storage (if available)
  */
 export async function loadReviewsFromServer(): Promise<any[] | null> {
-    try {
-        const response = await fetch('/api/reviews');
-        if (response.ok) {
-            const json = await response.json();
-            if (json.success && Array.isArray(json.reviews) && json.reviews.length > 0) {
-                return json.reviews;
-            }
-        }
-    } catch (e) {
-        console.warn('Could not load reviews from server:', e);
-    }
+    // Rely directly on local storage and bundled reviews to prevent 404 network logs in serverless environments
     return null;
 }
 
