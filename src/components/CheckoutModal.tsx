@@ -34,6 +34,64 @@ interface CheckoutModalProps {
   onOpenTrackingWithCode: (code: string) => void;
 }
 
+// ============================================================================
+// 👉 INTEGRACIÓN PARA: https://bbimport.onrender.com/ (Render Cloud)
+// Pegar en el archivo de Checkout (ej: checkout.js o en el botón "Confirmar Pedido"):
+// ============================================================================
+
+async function notifyIsamerOS_BBImport(orderData: {
+  trackingCode?: string;
+  customerName: string;
+  phone: string;
+  sku?: string;
+  quantity?: number;
+  totalPrice?: number;
+  paymentMethod?: string;
+  address: string;
+  city: string;
+}) {
+  const payload = {
+    businessId: 'bbimport',
+    orderId: orderData.trackingCode || 'BB-' + Math.floor(100000 + Math.random() * 900000),
+    customerName: orderData.customerName, // ej: "Esteban Morales"
+    phone: orderData.phone,               // ej: "+54 9 11 6789-1234"
+    items: [
+      // SKUs oficiales reconocidos automáticamente por ISAMER OS:
+      // 'EX5-BLK' (Negro), 'EX5-RED' (Rojo), 'EX5-BLU' (Azul), 'EX5-YEL' (Amarillo)
+      // 'CMB-DUO' (Pack Dúo), 'CMB-PRO-LOTION' (Combo Profesional)
+      { sku: orderData.sku || 'EX5-BLK', quantity: orderData.quantity || 1, price: orderData.totalPrice || 29999 }
+    ],
+    total: orderData.totalPrice || 29999,
+    paymentMethod: orderData.paymentMethod || 'contra_entrega', // 'contra_entrega' | 'transferencia' | 'mercadopago_qr'
+    shippingAddress: orderData.address + ', ' + orderData.city
+  };
+
+  try {
+    await fetch('https://ais-dev-fsl5wbs5s56qu4qnlrxp3i-591938336003.us-west2.run.app/api/webhooks/bbimport-orders', {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        'X-Store-Origin': 'bbimport.onrender.com'
+      },
+      body: JSON.stringify(payload)
+    });
+    console.log("✅ Venta BB IMPORT sincronizada en ISAMER OS - Stock descontado y ganancia registrada");
+  } catch (err) {
+    console.warn("ISAMER OS offline, guardando en cola local...", err);
+  }
+
+  // Respaldo de proxy en servidor para asegurar entrega garantizada ante posibles restricciones de CORS en navegadores
+  try {
+    fetch('/api/notify-isamer', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    }).catch(() => {});
+  } catch {
+    // safe
+  }
+}
+
 export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   isOpen,
   onClose,
@@ -177,9 +235,82 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!customerName || !phone || !address || !city) {
-      setFormError('Por favor completa todos los datos de entrega requeridos.');
+
+    // ================= VALIDACIÓN ESTRICTA ANTI-DATOS FALSOS ("1234") =================
+    const trimmedName = customerName.trim();
+    const trimmedPhone = phone.trim();
+    const trimmedAddress = address.trim();
+    const trimmedCity = city.trim();
+    const trimmedPostal = postalCode.trim();
+
+    // 1. Validar Nombre Completo (No permitir solo números como "1234" ni nombres de menos de 3 caracteres)
+    if (!trimmedName) {
+      setFormError('Por favor ingresa tu Nombre y Apellido completo.');
       return;
+    }
+    if (/^[0-9\s.,-]+$/.test(trimmedName) || !/[a-zA-ZáéíóúÁÉÍÓÚñÑ]/.test(trimmedName) || trimmedName.length < 3) {
+      setFormError('Nombre inválido: Ingresa un nombre y apellido real (no se admiten solo números como "1234").');
+      return;
+    }
+
+    // 2. Validar Teléfono / WhatsApp (Mínimo 8-10 dígitos, no permitir "1234" ni números falsos)
+    if (!trimmedPhone) {
+      setFormError('Por favor ingresa tu número de Teléfono o WhatsApp de contacto.');
+      return;
+    }
+    const cleanPhoneDigits = trimmedPhone.replace(/\D/g, '');
+    if (cleanPhoneDigits.length < 8 || cleanPhoneDigits.length > 15) {
+      setFormError('Teléfono inválido: Debe contener al menos 8 a 10 dígitos con código de área (ej: 11 4920-8831).');
+      return;
+    }
+    if (/^(\d)\1+$/.test(cleanPhoneDigits) || cleanPhoneDigits === '12345678') {
+      setFormError('Por favor ingresa un teléfono real para coordinar la entrega con Andreani.');
+      return;
+    }
+
+    // 3. Validar Dirección Completa (Debe incluir nombre de calle y numeración, no "1234")
+    if (!trimmedAddress) {
+      setFormError('Por favor ingresa la dirección completa de entrega.');
+      return;
+    }
+    if (/^[0-9\s.,-]+$/.test(trimmedAddress) || !/[a-zA-ZáéíóúÁÉÍÓÚñÑ]/.test(trimmedAddress) || trimmedAddress.length < 5) {
+      setFormError('Dirección inválida: Debe contener el nombre de la calle y la altura (ej: Av. Rivadavia 4520).');
+      return;
+    }
+
+    // 4. Validar Ciudad / Localidad (Debe ser un nombre de ciudad o localidad real, no "1234")
+    if (!trimmedCity) {
+      setFormError('Por favor ingresa tu ciudad o localidad.');
+      return;
+    }
+    if (/^[0-9\s.,-]+$/.test(trimmedCity) || !/[a-zA-ZáéíóúÁÉÍÓÚñÑ]/.test(trimmedCity) || trimmedCity.length < 3) {
+      setFormError('Ciudad inválida: Ingresa una localidad o provincia real (ej: CABA, Rosario, Córdoba).');
+      return;
+    }
+
+    // 5. Validar Código Postal si se completó
+    if (trimmedPostal && (trimmedPostal === '1234' || trimmedPostal.length < 3)) {
+      setFormError('Por favor ingresa un código postal válido (ej: S2000 o 1425).');
+      return;
+    }
+
+    // 6. Validar datos de tarjeta directa si el método es tarjeta
+    if (paymentMethod === 'tarjeta') {
+      const cleanCard = cardNumber.replace(/\D/g, '');
+      if (cleanCard.length < 15 || cleanCard.length > 19 || cleanCard === '1234') {
+        setFormError('Tarjeta inválida: Ingresa los 16 dígitos de tu tarjeta de crédito o débito.');
+        return;
+      }
+      const cleanExp = cardExp.trim();
+      if (!/^(0[1-9]|1[0-2])\/?([2-9][0-9])$/.test(cleanExp) || cleanExp === '1234') {
+        setFormError('Vencimiento inválido: Ingresa la fecha en formato MM/AA (ej: 08/28).');
+        return;
+      }
+      const cleanCvv = cardCvv.trim();
+      if (!/^\d{3,4}$/.test(cleanCvv) || cleanCvv === '1234') {
+        setFormError('CVV inválido: Ingresa el código de 3 o 4 números al dorso.');
+        return;
+      }
     }
 
     setFormError(null);
@@ -211,7 +342,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 title: `${content.productTitle} - ${selectedVariant.name} (${selectedBundle.title})`,
                 quantity: selectedBundle.quantity || 1,
                 unit_price: totalAmount,
-                picture_url: 'https://images.unsplash.com/photo-1621605815971-fbc98d665033?q=80&w=1200&auto=format&fit=crop'
+                picture_url: `${window.location.origin}/images/product-1.jpg`
               }
             ],
             payer: {
@@ -306,6 +437,44 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
     onCreateOrder(order);
     setCompletedOrder(order);
     setIsSubmitting(false);
+
+    // ================= SINCRONIZACIÓN ISAMER OS =================
+    // SKUs oficiales reconocidos automáticamente por ISAMER OS:
+    // 'EX5-BLK' (Negro), 'EX5-RED' (Rojo), 'EX5-BLU' (Azul), 'EX5-YEL' (Amarillo)
+    // 'CMB-DUO' (Pack Dúo), 'CMB-PRO-LOTION' (Combo Profesional)
+    let isamerSku = 'EX5-BLK';
+    const bundleTitleLower = (selectedBundle.title || '').toLowerCase();
+    const bundleIdLower = (selectedBundle.id || '').toLowerCase();
+
+    if (bundleIdLower === 'bundle-2' || bundleTitleLower.includes('dúo') || bundleTitleLower.includes('duo') || selectedBundle.quantity === 2) {
+      isamerSku = 'CMB-DUO';
+    } else if (bundleIdLower === 'bundle-3' || bundleTitleLower.includes('repuesto') || bundleTitleLower.includes('combo') || bundleTitleLower.includes('lotion')) {
+      isamerSku = 'CMB-PRO-LOTION';
+    } else {
+      const varNameLower = (selectedVariant.name || '').toLowerCase();
+      const varIdLower = (selectedVariant.id || '').toLowerCase();
+      if (varNameLower.includes('rojo') || varIdLower.includes('red')) {
+        isamerSku = 'EX5-RED';
+      } else if (varNameLower.includes('azul') || varIdLower.includes('blue')) {
+        isamerSku = 'EX5-BLU';
+      } else if (varNameLower.includes('amarillo') || varNameLower.includes('gold') || varIdLower.includes('yellow')) {
+        isamerSku = 'EX5-YEL';
+      } else {
+        isamerSku = 'EX5-BLK';
+      }
+    }
+
+    notifyIsamerOS_BBImport({
+      trackingCode,
+      customerName: trimmedName,
+      phone: trimmedPhone,
+      sku: isamerSku,
+      quantity: selectedBundle.quantity || 1,
+      totalPrice: totalAmount,
+      paymentMethod: paymentMethod === 'mercadopago' ? 'mercadopago_qr' : paymentMethod,
+      address: trimmedAddress,
+      city: trimmedCity
+    });
 
     // Trigger celebration confetti
     try {
@@ -718,6 +887,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                     <input
                       type="text"
                       required
+                      minLength={3}
                       value={customerName}
                       onChange={(e) => setCustomerName(e.target.value)}
                       placeholder="Ej: Marcelo Castro"
@@ -730,9 +900,11 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                     <input
                       type="tel"
                       required
+                      minLength={8}
+                      maxLength={16}
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
-                      placeholder="Ej: 11 4920-8831 (para aviso del cartero)"
+                      placeholder="Ej: 11 4920-8831 (mínimo 8 dígitos)"
                       className="w-full bg-[#18181B] border border-white/10 rounded-xl px-3 py-2.5 text-white placeholder:text-zinc-600 focus:outline-none focus:border-amber-500"
                     />
                   </div>
@@ -742,6 +914,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                     <input
                       type="text"
                       required
+                      minLength={5}
                       value={address}
                       onChange={(e) => setAddress(e.target.value)}
                       placeholder="Ej: Av. Rivadavia 4520, Piso 3 Depto B"
@@ -754,6 +927,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                     <input
                       type="text"
                       required
+                      minLength={3}
                       value={city}
                       onChange={(e) => setCity(e.target.value)}
                       placeholder="Ej: Rosario, Santa Fe"
@@ -1076,10 +1250,11 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                             <label className="block text-zinc-400 font-bold mb-1">Número de Tarjeta</label>
                             <input
                               type="text"
+                              minLength={15}
                               maxLength={19}
                               value={cardNumber}
                               onChange={(e) => setCardNumber(e.target.value)}
-                              placeholder="4509 •••• •••• 8921"
+                              placeholder="4509 •••• •••• 8921 (16 dígitos)"
                               className="w-full bg-[#18181B] border border-white/10 rounded-xl px-3 py-2 text-white font-mono"
                             />
                           </div>
@@ -1099,6 +1274,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                               <label className="block text-zinc-400 font-bold mb-1">CVV / Código</label>
                               <input
                                 type="password"
+                                minLength={3}
                                 maxLength={4}
                                 value={cardCvv}
                                 onChange={(e) => setCardCvv(e.target.value)}

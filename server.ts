@@ -122,6 +122,30 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// API: Forward BB IMPORT order to ISAMER OS webhook (server-side proxy avoids browser CORS issues)
+app.post('/api/notify-isamer', async (req, res) => {
+  try {
+    const orderData = req.body;
+    const isamerUrl = 'https://ais-dev-fsl5wbs5s56qu4qnlrxp3i-591938336003.us-west2.run.app/api/webhooks/bbimport-orders';
+    
+    const response = await fetch(isamerUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Store-Origin': 'bbimport.onrender.com'
+      },
+      body: JSON.stringify(orderData)
+    });
+
+    const respText = await response.text();
+    console.log('[ISAMER OS Sync] Response code:', response.status);
+    return res.json({ success: true, status: response.status, data: respText });
+  } catch (error: any) {
+    console.warn('[ISAMER OS Sync] Warning forwarding order:', error.message);
+    return res.json({ success: false, error: error.message });
+  }
+});
+
 // Helper to get Mercado Pago Token from environment
 function getMercadoPagoToken(customToken?: string): string | null {
   if (customToken && customToken.trim().length > 10) {
@@ -228,7 +252,7 @@ async function handleCreatePreference(req: express.Request, res: express.Respons
           id: String(it.id || 'bb-prod'),
           title: String(it.title || 'Máquina Cortadora BB IMPORT'),
           quantity: Number(it.quantity || 1),
-          unit_price: Number(it.unit_price || it.price || 42990),
+          unit_price: Number(it.unit_price || it.price || 29999),
           currency_id: 'ARS',
           picture_url: it.picture_url || undefined,
           description: it.description || 'Producto profesional BB IMPORT'
@@ -238,7 +262,7 @@ async function handleCreatePreference(req: express.Request, res: express.Respons
             id: 'bb-prod-1',
             title: 'Máquina cortadora EXXTRA TECH BB IMPORT',
             quantity: 1,
-            unit_price: 42990,
+            unit_price: 29999,
             currency_id: 'ARS'
           }
         ];
