@@ -104,13 +104,13 @@ export const initialBundles: BundleOffer[] = [
   {
     id: 'bundle-2',
     title: '2x Máquinas EXXTRA TECH™ EX5 (Pack Dúo)',
-    subtitle: 'El favorito de Barberos y Regalos. Ahorras $49.990 extra',
+    subtitle: 'El favorito de Barberos y clientes. Ahorras $20.999 extra',
     quantity: 2,
     price: 54999,
     originalPrice: 75999,
-    discountPercentage: 40,
+    discountPercentage: 25,
     popular: true,
-    badge: 'MEJOR VALOR ⭐ (40% OFF)'
+    badge: 'MEJOR VALOR ⭐ (25% OFF)'
   },
   {
     id: 'bundle-3',
@@ -127,9 +127,9 @@ export const initialBundles: BundleOffer[] = [
 export const initialStoreContent: StoreContent = {
   storeName: 'BB IMPORT',
   tagline: 'Línea de Barbería & Peluquería Profesional',
-  topBannerText: '🚚 ENVÍO GRATIS A TODO EL PAÍS (PAGAS AL RECIBIR) | ⚡ 40% OFF HASTA AGOTAR STOCK | 🔒 COMPRA 100% GARANTIZADA',
+  topBannerText: '🚚 ENVÍOS A TODO EL PAÍS (PAGAS AL RECIBIR) | ⚡ 25% OFF HASTA AGOTAR STOCK | 🔒 COMPRA 100% GARANTIZADA',
   productTitle: 'Máquina Cortadora y Patillera EXXTRA TECH™ EX5 ',
-  productSubtitle: 'Corte al ras 0mm, degradados perfectos y perfilado de barba profesional con motor magnético silencioso de 7.000 RPM.',
+  productSubtitle: 'Corte al ras 0mm, degradados perfectos y perfilado de barba profesional con motor magnético silencioso de 7.000 RPM. Imagenes ilustrativas.',
   badgeTag: 'N° 1 EN VENTAS PARA BARBEROS',
   regularPrice: 39999,
   salePrice: 29999,

@@ -143,7 +143,7 @@ export default function App() {
       {
         id: 'push-welcome',
         title: '🚚 Envío Gratis en todo el país',
-        body: 'Aprovecha el 40% OFF en la línea EXXTRA TECH™ de BB IMPORT. Pagas en mano al recibir.',
+        body: 'Aprovecha el 25% OFF en la línea EXXTRA TECH™ de BB IMPORT. Pagas en mano al recibir.',
         timestamp: 'Ahora',
         read: false
       }

@@ -1128,7 +1128,7 @@ Cualquier consulta quedamos a tu disposición. ¡Muchas gracias por tu compra!`;
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-zinc-400 mb-1 flex items-center gap-1.5">
+                  <label className="text-xs font-bold text-zinc-400 mb-1 flex items-center gap-1.5">
                     <Facebook className="w-3.5 h-3.5 text-blue-400" /> Enlace de Facebook
                   </label>
                   <input
@@ -1141,7 +1141,7 @@ Cualquier consulta quedamos a tu disposición. ¡Muchas gracias por tu compra!`;
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-zinc-400 mb-1 flex items-center gap-1.5">
+                  <label className="text-xs font-bold text-zinc-400 mb-1 flex items-center gap-1.5">
                     <Facebook className="w-3.5 h-3.5 text-blue-400" /> Nombre de Página de Facebook
                   </label>
                   <input
@@ -1155,7 +1155,7 @@ Cualquier consulta quedamos a tu disposición. ¡Muchas gracias por tu compra!`;
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-bold text-zinc-400 mb-1 flex items-center gap-1.5">
+                    <label className="text-xs font-bold text-zinc-400 mb-1 flex items-center gap-1.5">
                       <MessageCircle className="w-3.5 h-3.5 text-emerald-400" /> WhatsApp Oficial
                     </label>
                     <input

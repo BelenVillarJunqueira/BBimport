@@ -175,8 +175,8 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({
         </div>
         <div className="flex items-center gap-1.5 text-emerald-400 font-mono text-[11px]">
           <ShieldCheck className="w-3.5 h-3.5" />
-          <span className="hidden sm:inline">Fotos y Videos 100% Reales</span>
-          <span className="sm:hidden">Contenido Real</span>
+          <span className="hidden sm:inline">Productos Reales</span>
+          <span className="sm:hidden">Aprobado por barberos</span>
         </div>
       </div>
 
@@ -203,7 +203,7 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({
             </span>
           )}
           <span className="bg-black/75 backdrop-blur-md border border-white/15 text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full w-fit shadow-md">
-            40% OFF HOY
+            25% OFF HOY
           </span>
         </div>
 
