@@ -23,7 +23,7 @@ interface ProductGalleryProps {
   selectedVariantIndex: number;
 }
 
-const FALLBACK_IMAGE = 'https://www.pexels.com/es-es/foto/cabellos-melena-pelo-cabello-18503604/';
+const FALLBACK_IMAGE = '/uploads/media-1788721815153-p1sjl.jpeg';
 
 export const ProductGallery: React.FC<ProductGalleryProps> = ({
   media,
@@ -74,7 +74,7 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({
   // Reset errors and loading state whenever the active media changes
   const currentItem = safeMedia[activeIndex] || safeMedia[0];
   const embedInfo = getMediaEmbedInfo(currentItem?.url || '', currentItem?.type);
-  const isVideoMedia = currentItem?.type === 'video' || embedInfo.platform !== 'image';
+  const isVideoMedia = currentItem?.type === 'video' || (currentItem?.type !== 'image' && embedInfo.platform !== 'image');
 
   useEffect(() => {
     setVideoError(false);
@@ -371,7 +371,7 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({
               onError={(e) => {
                 setIsMediaLoading(false);
                 const target = e.target as HTMLImageElement;
-                if (target.src !== FALLBACK_IMAGE) {
+                if (target.src !== FALLBACK_IMAGE && !target.src.endsWith(FALLBACK_IMAGE)) {
                   target.src = FALLBACK_IMAGE;
                 }
               }}
@@ -433,7 +433,7 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({
           {safeMedia.map((item, idx) => {
             const isSelected = idx === activeIndex;
             const thumbEmbed = getMediaEmbedInfo(item.url || '', item.type);
-            const isItemVideo = item.type === 'video' || thumbEmbed.platform !== 'image';
+            const isItemVideo = item.type === 'video' || (item.type !== 'image' && thumbEmbed.platform !== 'image');
 
             return (
               <button

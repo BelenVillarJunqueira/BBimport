@@ -2,53 +2,53 @@ import { BundleOffer, GatewaySettings, MediaItem, Order, ProductVariant, Review,
 
 export const initialMedia: MediaItem[] = [
   {
-    id: 'media-1',
+    id: 'media-1788641987383-1awt',
     type: 'image',
-    url: '',
-    title: 'Kit Completo EXXTRA TECH Barber BB IMPORT',
-    alt: 'Máquinas de cortar el cabello EXXTRA TECH con 4 peines guía, cable USB, aceite y cepillo de limpieza'
+    url: '/uploads/media-1788641987383-1awt.webp',
+    title: 'Kit Completo EXXTRA TECH - BB IMPORT',
+    alt: 'Máquina cortadora EXXTRA TECH Barber Pro kit completo'
   },
   {
-    id: 'media-2',
+    id: 'media-1788721814982-oydm',
     type: 'image',
-    url: '',
-    title: 'Corte Degradado y Fade de Alta Precisión',
-    alt: 'Barbero profesional realizando degradado impecable con máquina patillera inalámbrica'
+    url: '/uploads/media-1788721815153-p1sjl.jpeg',
+    title: 'Corte y Perfilado de Alta Precisión',
+    alt: 'Detalle de corte degradado y fade profesional'
   },
   {
-    id: 'media-3',
+    id: 'media-1788642092496-maao',
     type: 'image',
-    url: '',
+    url: '/uploads/media-1788642092496-maao.webp',
     title: 'Cuchillas T-Blade Acero Carbono Zero-Gap',
-    alt: 'Detalle del cabezal T-Blade en acero al carbono inoxidable para corte al ras 0mm'
+    alt: 'Cabezal T-Blade para corte al ras 0mm'
   },
   {
-    id: 'media-4',
+    id: 'media-1788642063456-2sps',
     type: 'image',
-    url: '',
-    title: 'Perfilado de Barba, Patillas y Cuello',
-    alt: 'Perfilado nítido al ras sin irritación ni tirones en piel sensible'
+    url: '/uploads/media-1788642063456-2sps.webp',
+    title: 'Perfilado de Barba y Patillas',
+    alt: 'Perfilado nítido al ras sin irritación'
   },
   {
-    id: 'media-5',
+    id: 'media-1788642043761-5s0w',
     type: 'image',
-    url: '',
-    title: 'Estación de Trabajo en Barbería Profesional',
-    alt: 'Presentación premium de la cortadora BB IMPORT en ambiente de barbería'
+    url: '/uploads/media-1788642043761-5s0w.webp',
+    title: 'Presentación Oficial BB IMPORT',
+    alt: 'Cortadora BB IMPORT profesional'
   },
   {
-    id: 'media-6',
+    id: 'media-1788723814416-7z7q',
     type: 'image',
-    url: '',
-    title: 'Agarre Ergonómico con Hendidura de Pulgar',
-    alt: 'Cuerpo metálico texturizado antideslizante para largas jornadas sin fatiga'
+    url: '/uploads/media-1788723814677-q75fs.jpeg',
+    title: 'Cuerpo Metálico Ergonómico Antideslizante',
+    alt: 'Textura antideslizante con agarre firme'
   },
   {
-    id: 'media-7',
-    type: 'image',
-    url: '',
-    title: 'Detalle de Acabado y Cuchilla Autoafilable',
-    alt: 'Tratamiento térmico anti-calentamiento y motor silencioso de 7.000 RPM'
+    id: 'media-1788645273754-5m7v',
+    type: 'video',
+    url: '/uploads/media-1788645273759-uqv5n.mp4',
+    title: 'Video Demostrativo EXXTRA TECH',
+    alt: 'Video en acción de la cortadora EXXTRA TECH'
   }
 ];
 
@@ -93,7 +93,7 @@ export const initialVariants: ProductVariant[] = [
 export const initialBundles: BundleOffer[] = [
   {
     id: 'bundle-1',
-    title: '1x Máquina EXXTRA TECH™ PRO',
+    title: '1x Máquina EXXTRA TECH™ EX5',
     subtitle: 'Incluye Kit Completo (4 peines + cable USB + aceite + cepillo)',
     quantity: 1,
     price: 30000,
@@ -103,18 +103,18 @@ export const initialBundles: BundleOffer[] = [
   },
   {
     id: 'bundle-2',
-    title: '2x Máquinas EXXTRA TECH™  (Pack Dúo)',
+    title: '2x Máquinas EXXTRA TECH™ EX5 (Pack Dúo)',
     subtitle: 'El favorito de Barberos y Regalos. Ahorras $49.990 extra',
     quantity: 2,
     price: 55000,
     originalPrice: 110000,
-    discountPercentage: 50,
+    discountPercentage: 40,
     popular: true,
-    badge: 'MEJOR VALOR ⭐ (50% OFF)'
+    badge: 'MEJOR VALOR ⭐ (40% OFF)'
   },
   {
     id: 'bundle-3',
-    title: '1x Máquina PRO + Loción post afeitada',
+    title: '1x Máquina EXXTRA TECH™ EX5 + Loción post afeitado',
     subtitle: 'Loción post afeitada profesional para piel sensible, 100ml',
     quantity: 1,
     price: 43000,
@@ -127,8 +127,8 @@ export const initialBundles: BundleOffer[] = [
 export const initialStoreContent: StoreContent = {
   storeName: 'BB IMPORT',
   tagline: 'Línea de Barbería & Peluquería Profesional',
-  topBannerText: '🚚 ENVÍOS  A TODO EL PAÍS (PAGAS AL RECIBIR) | ⚡ 40% OFF HASTA AGOTAR STOCK | 🔒 COMPRA 100% GARANTIZADA',
-  productTitle: 'Máquina Cortadora y Patillera EXXTRA TECH™ EX5',
+  topBannerText: '🚚 ENVÍO GRATIS A TODO EL PAÍS (PAGAS AL RECIBIR) | ⚡ 40% OFF HASTA AGOTAR STOCK | 🔒 COMPRA 100% GARANTIZADA',
+  productTitle: 'Máquina Cortadora y Patillera EXXTRA TECH™ EX5 ',
   productSubtitle: 'Corte al ras 0mm, degradados perfectos y perfilado de barba profesional con motor magnético silencioso de 7.000 RPM.',
   badgeTag: 'N° 1 EN VENTAS PARA BARBEROS',
   regularPrice: 51500,
@@ -138,7 +138,7 @@ export const initialStoreContent: StoreContent = {
   urgencyViewers: 34,
   stockLeft: 8,
   guaranteeDays: 30,
-  guaranteeTitle: 'Garantía Blindada de 30 Días',
+  guaranteeTitle: 'Garantía Blindada de 30 Días BB IMPORT',
   guaranteeDescription: 'Prueba la EXXTRA TECH™ en tu casa o barbería. Si no supera tus expectativas de corte, potencia y duración de batería, te devolvemos el 100% de tu dinero sin preguntas.',
   shippingHeadline: 'Despacho Exprés Inmediato con Seguro de Entrega',
   shippingSubtext: 'Enviamos a cualquier rincón del país por Correo Argentino / Andreani con código de rastreo en tiempo real.',
@@ -152,11 +152,11 @@ export const initialStoreContent: StoreContent = {
     '1x Cable de Carga Rápida USB',
     '1x Cepillo Especial Limpiador de Cerdas Finas',
     '1x Frasco Gotero de Aceite Lubricante para Cuchillas',
-    
+    '1x Manual Oficial de Uso & Certificado de Garantía BB IMPORT'
   ],
   instagramUrl: 'https://www.instagram.com/bigboss_import/',
   instagramHandle: '@bigboss_import',
-  facebookUrl: 'https://facebook.com/',
+  facebookUrl: '',
   facebookPage: '',
   whatsappNumber: '+54 9 3515 05-6742',
   supportEmail: 'bigbossimportaciones@gmail.com'
@@ -175,11 +175,11 @@ export const initialOrders: Order[] = [
     items: [
       {
         productId: 'prod-1',
-        productName: 'Máquina Cortadora EXXTRA TECH™ V2 Pro',
+        productName: 'Máquina Cortadora EXXTRA TECH™ EX5',
         variantName: 'Negro Matte (Titanium Black)',
         quantity: 1,
         price: 30000,
-        bundleTitle: '1x Máquina EXXTRA TECH™ PRO'
+        bundleTitle: '1x Máquina EXXTRA TECH™ EX5'
       }
     ],
     subtotal: 30000,
@@ -233,16 +233,16 @@ export const initialOrders: Order[] = [
     items: [
       {
         productId: 'prod-1',
-        productName: 'Pack Dúo 2x EXXTRA TECH™ ',
+        productName: 'Pack Dúo 2x EXXTRA TECH™ EX5',
         variantName: 'Rojo Carmín + Negro Matte',
         quantity: 2,
-        price: 55000,
-        bundleTitle: '2x Máquinas EXXTRA TECH™  (Pack Dúo)'
+        price: 60000,
+        bundleTitle: '2x Máquinas EXXTRA TECH™ EX5 (Pack Dúo)'
       }
     ],
-    subtotal: 55000,
+    subtotal: 60000,
     shippingCost: 0,
-    total: 55000,
+    total: 60000,
     paymentMethod: 'transferencia',
     paymentStatus: 'Aprobado',
     status: 'En Reparto',
@@ -291,11 +291,11 @@ export const initialOrders: Order[] = [
     items: [
       {
         productId: 'prod-1',
-        productName: 'Máquina EXXTRA TECH™ ',
+        productName: 'Máquina EXXTRA TECH™ EX5',
         variantName: 'Azul Eléctrico (Deep Ocean)',
         quantity: 1,
         price: 30000,
-        bundleTitle: '1x Máquina EXXTRA TECH™ '
+        bundleTitle: '1x Máquina EXXTRA TECH™ EX5'
       }
     ],
     subtotal: 30000,
@@ -349,14 +349,14 @@ export const initialReviews: Review[] = [
   {
     id: 'rev-1',
     author: 'Martín "Tito" Barber',
-    location: 'Buenos Aires (CABA)',
+    location: 'Buenos Aires CABA',
     rating: 5,
     date: 'Hace 2 días',
     title: 'Increíble potencia y cero tirones, la uso 8 horas al día',
-    comment: 'Tengo mi barbería en Palermo y compré 2 máquinas para probarlas con los cleintes más exigentes. El motor vuela, corta al ras sin cortar la piel y la batería me aguanta casi 4 días con uso moderado. Excelente atención de BB IMPORT.',
+    comment: 'Tengo mi barbería en Palermo y compré 2 máquinas para probarlas con los fades más exigentes. El motor vuela, corta al ras sin cortar la piel y la batería me aguanta casi 4 días con uso moderado. Excelente atención de BB IMPORT.',
     verifiedBuyer: true,
-    role: 'Barbero Profesional',
-    imageUrl: 'https://images.pexels.com/photos/18503604/pexels-photo-18503604.jpeg'
+    role: 'Barbero Profesional ',
+    imageUrl: '/images/review-1.jpg'
   },
   {
     id: 'rev-2',
@@ -366,19 +366,18 @@ export const initialReviews: Review[] = [
     date: 'Hace 3 días',
     title: 'Llegó en 24hs y pagué en efectivo en mi puerta',
     comment: 'Elegí el pago contra entrega porque desconfiaba un poco de comprar online, pero fue 10/10. Llegó por Andreani, revisé que esté la caja con los 4 peines y el aceite y le pagué al repartidor. La máquina es súper pesada y de calidad, nada de plástico barato.',
-    verifiedBuyer: true,
-    imageUrl: 'https://images.pexels.com/photos/18503604/pexels-photo-18503604.jpeg'
+    verifiedBuyer: true
   },
   {
     id: 'rev-3',
     author: 'Facundo D.',
     location: 'Rosario',
     rating: 5,
-    date: 'Hace 5 días',
+    date: 'Hace 3 semanas',
     title: 'Para perfilar la barba es lo mejor que existe',
-    comment: 'Siempre me costaba dejarme los bordes del cuello y las mejillas prolijos con afeitadoras comunes. La patillera EXXTRA TECH deja una línea como con navaja y no irrita para nada. Vale cada peso.',
+    comment: 'Siempre me costaba dejarme los bordes del cuello y las mejillas prolijos con afeitadoras comunes. La patillera EXXTRA TECH deja una línea como con navaja y no irrita para nada. Quedas prolijo y presentable para salir en poco tiempo y sin necesitar un peluquero. Vale cada peso.',
     verifiedBuyer: true,
-    imageUrl: 'https://flow.google.com/project/85a36dd8-3889-4df5-993f-f439c90f9df6/edit/c22a3c3e-0a1c-4084-9f59-4a0ffa2c9515'
+    imageUrl: '/images/review-2.jpg'
   },
   {
     id: 'rev-4',
@@ -395,7 +394,7 @@ export const initialReviews: Review[] = [
     author: 'Agustín Pereyra',
     location: 'La Plata',
     rating: 5,
-    date: 'Hace 1 semana',
+    date: 'Hace 2 semana',
     title: 'Silenciosa y no se calienta la cuchilla',
     comment: 'Muchas patilleras baratas a los 10 minutos hierven en la piel del cliente. Esta mantiene la temperatura baja y el motor no vibra fuerte en la mano. 100% recomendada para colegas peluqueros.',
     verifiedBuyer: true,
@@ -406,7 +405,7 @@ export const initialReviews: Review[] = [
     author: 'Claudio V.',
     location: 'Neuquén',
     rating: 4,
-    date: 'Hace 2 semanas',
+    date: 'Hace 1 mes',
     title: 'Excelente máquina, el envío demoró un día más por el correo',
     comment: 'La máquina es una bestia total, tiene un filo impresionante. El correo demoró 72hs en vez de 48hs por el clima acá en el sur, pero la gente de BB IMPORT me atendió rapidísimo por WhatsApp y me pasaron el estado al instante.',
     verifiedBuyer: true
@@ -419,9 +418,9 @@ export const initialGateways: GatewaySettings = {
   enableTransfer: true,
   enableCards: true,
   mercadoPago: {
-    publicKey: 'APP_USR-7a6b980c-bbimport-prod-2025',
+    publicKey: 'APP_USR-fef5e2b4-0495-4fc7-90be-33760c4c04fb',
     accessToken: '',
-    paymentLinkUrl: 'https://mpago.la/2vK8Xqp',
+    paymentLinkUrl: '',
     mpAliasOrCvu: 'beluula.mp',
     environment: 'production',
     installmentsMax: 12
@@ -430,7 +429,7 @@ export const initialGateways: GatewaySettings = {
     bankName: 'Banco Galicia',
     accountHolder: 'BB IMPORT S.R.L.',
     cbu: '0070327530004092450465',
-    alias: 'RBVILLAR3.GAL',
+    alias: 'rbvillar3.gal',
     cuit: '23-37066549-4',
     instructions: 'Transfiere el monto exacto de la orden a nuestro Alias o CBU oficial. Luego envía el comprobante por WhatsApp o súbelo en el formulario para despacho prioritario.'
   }
@@ -450,7 +449,7 @@ export const initialFaqs = [
   {
     id: 'faq-3',
     question: '¿Qué incluye exactamente la caja del producto?',
-    answer: 'La caja oficial incluye: 1 Máquina cortadora EXXTRA TECH™ EX5, 4 peines guía de corte (1.5mm, 3mm, 6mm y 9mm), 1 cable USB de carga rápida, 1 cepillo de limpieza, 1 frasco de aceite lubricante para cuchillas y el manual con garantía oficial de 30 días.'
+    answer: 'La caja oficial incluye: 1 Máquina cortadora EXXTRA TECH™ V2 Pro, 4 peines guía de corte (1.5mm, 3mm, 6mm y 9mm), 1 cable USB de carga rápida, 1 cepillo de limpieza, 1 frasco de aceite lubricante para cuchillas y el manual con garantía oficial de 30 días.'
   },
   {
     id: 'faq-4',

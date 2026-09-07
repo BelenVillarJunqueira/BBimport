@@ -298,7 +298,12 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   // Add external URL media (Social Reels, YouTube, MP4 or Images)
   const handleAddMediaUrl = () => {
     if (!newMediaUrl.trim()) return;
-    const url = newMediaUrl.trim();
+    let url = newMediaUrl.trim();
+    if (url.startsWith('/public/')) {
+      url = url.replace(/^\/public\//, '/');
+    } else if (url.startsWith('public/')) {
+      url = url.replace(/^public\//, '/');
+    }
     const isVid = isUrlVideo(url) || newMediaType === 'video';
     const cleanTitle = newMediaTitle.trim() || (isVid ? 'Reel de demostración' : 'Foto de producto');
 
@@ -607,7 +612,10 @@ Cualquier consulta quedamos a tu disposición. ¡Muchas gracias por tu compra!`;
             </button>
           </form>
 
-
+          <div className="p-3 bg-white/5 border border-white/10 rounded-xl text-[11px] text-zinc-400 text-center">
+            <span className="text-zinc-500 block mb-0.5">Credenciales iniciales de seguridad:</span>
+            Usuario: <strong className="text-amber-400 font-mono">admin</strong> • Contraseña: <strong className="text-amber-400 font-mono">bbimport2025</strong>
+          </div>
         </div>
       </div>
     );
@@ -624,7 +632,7 @@ Cualquier consulta quedamos a tu disposición. ¡Muchas gracias por tu compra!`;
               PANEL ADMIN
             </span>
           </span>
-          <span className="hidden lg:flex text-xs text-emerald-400 font-mono items-center gap-1.5">
+          <span className="hidden lg:inline text-xs text-emerald-400 font-mono flex items-center gap-1.5">
             <Lock className="w-3 h-3" /> Panel Oculto: Inaccesible para clientes
           </span>
         </div>
@@ -817,7 +825,7 @@ Cualquier consulta quedamos a tu disposición. ¡Muchas gracias por tu compra!`;
                       </tr>
                     ) : (
                       filteredOrders.map((ord) => (
-                        <tr key={ord.id} className="hover:bg-white/2 transition-colors">
+                        <tr key={ord.id} className="hover:bg-white/[0.02] transition-colors">
                           <td className="py-3.5 px-4 font-mono font-bold text-amber-400">
                             {ord.trackingCode}
                             <div className="text-[10px] text-zinc-500 font-sans">
@@ -830,7 +838,7 @@ Cualquier consulta quedamos a tu disposición. ¡Muchas gracias por tu compra!`;
                           </td>
                           <td className="py-3.5 px-4">
                             <p className="font-medium text-white">{ord.city}</p>
-                            <p className="text-[10px] text-zinc-500 truncate max-w-37.5">{ord.address}</p>
+                            <p className="text-[10px] text-zinc-500 truncate max-w-[150px]">{ord.address}</p>
                           </td>
                           <td className="py-3.5 px-4">
                             <span className="text-zinc-200 font-medium">
@@ -1099,7 +1107,7 @@ Cualquier consulta quedamos a tu disposición. ¡Muchas gracias por tu compra!`;
                 </h4>
 
                 <div>
-                  <label className="text-xs font-bold text-zinc-400 mb-1 flex items-center gap-1.5">
+                  <label className="flex text-xs font-bold text-zinc-400 mb-1 items-center gap-1.5">
                     <Instagram className="w-3.5 h-3.5 text-pink-400" /> Enlace de Instagram
                   </label>
                   <input
@@ -1112,7 +1120,7 @@ Cualquier consulta quedamos a tu disposición. ¡Muchas gracias por tu compra!`;
                 </div>
 
                 <div>
-                  <label className="text-xs font-bold text-zinc-400 mb-1 flex items-center gap-1.5">
+                  <label className="block text-xs font-bold text-zinc-400 mb-1 flex items-center gap-1.5">
                     <Instagram className="w-3.5 h-3.5 text-pink-400" /> Usuario / Arroba de Instagram
                   </label>
                   <input
@@ -1125,7 +1133,7 @@ Cualquier consulta quedamos a tu disposición. ¡Muchas gracias por tu compra!`;
                 </div>
 
                 <div>
-                  <label className="text-xs font-bold text-zinc-400 mb-1 flex items-center gap-1.5">
+                  <label className="block text-xs font-bold text-zinc-400 mb-1 flex items-center gap-1.5">
                     <Facebook className="w-3.5 h-3.5 text-blue-400" /> Enlace de Facebook
                   </label>
                   <input
@@ -1138,7 +1146,7 @@ Cualquier consulta quedamos a tu disposición. ¡Muchas gracias por tu compra!`;
                 </div>
 
                 <div>
-                  <label className="text-xs font-bold text-zinc-400 mb-1 flex items-center gap-1.5">
+                  <label className="block text-xs font-bold text-zinc-400 mb-1 flex items-center gap-1.5">
                     <Facebook className="w-3.5 h-3.5 text-blue-400" /> Nombre de Página de Facebook
                   </label>
                   <input
@@ -1152,7 +1160,7 @@ Cualquier consulta quedamos a tu disposición. ¡Muchas gracias por tu compra!`;
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="text-xs font-bold text-zinc-400 mb-1 flex items-center gap-1.5">
+                    <label className="block text-xs font-bold text-zinc-400 mb-1 flex items-center gap-1.5">
                       <MessageCircle className="w-3.5 h-3.5 text-emerald-400" /> WhatsApp Oficial
                     </label>
                     <input
@@ -1420,7 +1428,7 @@ Cualquier consulta quedamos a tu disposición. ¡Muchas gracias por tu compra!`;
                 {(Array.isArray(media) ? media : []).map((item, idx) => {
                   if (!item) return null;
                   const itemKey = item.id || `media-${idx}`;
-                  const itemUrl = item.url || 'https://images.unsplash.com/photo-1621605815971-fbc98d665033?q=80&w=1200&auto=format&fit=crop';
+                  const itemUrl = item.url || '/uploads/media-1788721815153-p1sjl.jpeg';
                   const itemTitle = item.title || 'Foto de producto';
                   const itemEmbed = getMediaEmbedInfo(itemUrl, item.type);
                   const isVideoItem = item.type === 'video' || (item.type !== 'image' && itemEmbed.platform !== 'image');
@@ -1453,7 +1461,7 @@ Cualquier consulta quedamos a tu disposición. ¡Muchas gracias por tu compra!`;
                             alt={itemTitle}
                             referrerPolicy="no-referrer"
                             onError={(e) => {
-                              (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1621605815971-fbc98d665033?q=80&w=1200&auto=format&fit=crop';
+                              (e.target as HTMLImageElement).src = '/uploads/media-1788721815153-p1sjl.jpeg';
                             }}
                             className="w-full h-full object-cover"
                           />

@@ -177,8 +177,17 @@ export async function syncMediaWithServer(media: any[]): Promise<boolean> {
  * Loads media array from server-side persistent storage (if available)
  */
 export async function loadMediaFromServer(): Promise<any[] | null> {
-    // Rely directly on local storage and bundled media to prevent 404 network logs in serverless environments
-    return null;
+    try {
+        const response = await fetch('/api/media');
+        if (!response.ok) return null;
+        const data = await response.json();
+        if (data && data.success && Array.isArray(data.media) && data.media.length > 0) {
+            return data.media;
+        }
+        return null;
+    } catch {
+        return null;
+    }
 }
 
 /**
@@ -203,7 +212,16 @@ export async function syncReviewsWithServer(reviews: any[]): Promise<boolean> {
  * Loads reviews array from server-side persistent storage (if available)
  */
 export async function loadReviewsFromServer(): Promise<any[] | null> {
-    // Rely directly on local storage and bundled reviews to prevent 404 network logs in serverless environments
-    return null;
+    try {
+        const response = await fetch('/api/reviews');
+        if (!response.ok) return null;
+        const data = await response.json();
+        if (data && data.success && Array.isArray(data.reviews) && data.reviews.length > 0) {
+            return data.reviews;
+        }
+        return null;
+    } catch {
+        return null;
+    }
 }
 

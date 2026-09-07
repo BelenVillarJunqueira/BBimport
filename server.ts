@@ -15,6 +15,15 @@ const PORT = 3000;
 app.use(express.json({ limit: '100mb' }));
 app.use(express.urlencoded({ limit: '100mb', extended: true }));
 
+// Automatically redirect any accidental /public/* requests to /* so assets in the public folder resolve seamlessly
+app.use((req, res, next) => {
+  if (req.path.startsWith('/public/')) {
+    const cleanedUrl = req.url.replace(/^\/public\//, '/');
+    return res.redirect(301, cleanedUrl);
+  }
+  next();
+});
+
 // Ensure uploads folder exists and serve it statically with video range streaming support
 const uploadsDir = path.join(process.cwd(), 'uploads');
 if (!fs.existsSync(uploadsDir)) {

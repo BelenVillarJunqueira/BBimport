@@ -111,7 +111,9 @@ export default function App() {
           item.url &&
           !item.url.includes('mixkit.co') &&
           !item.url.startsWith('data:video/') &&
-          !item.url.includes('xbqz5')
+          !item.url.includes('xbqz5') &&
+          !item.url.includes('images.unsplash.com') &&
+          !item.url.includes('/images/product-')
       );
     });
   });
