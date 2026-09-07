@@ -611,11 +611,6 @@ Cualquier consulta quedamos a tu disposición. ¡Muchas gracias por tu compra!`;
               Volver a la Tienda
             </button>
           </form>
-
-          <div className="p-3 bg-white/5 border border-white/10 rounded-xl text-[11px] text-zinc-400 text-center">
-            <span className="text-zinc-500 block mb-0.5">Credenciales iniciales de seguridad:</span>
-            Usuario: <strong className="text-amber-400 font-mono">admin</strong> • Contraseña: <strong className="text-amber-400 font-mono">bbimport2025</strong>
-          </div>
         </div>
       </div>
     );
