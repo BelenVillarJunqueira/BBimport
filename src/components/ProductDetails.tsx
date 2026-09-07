@@ -105,7 +105,7 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({
             ★★★★★
           </div>
           <span className="text-xs font-bold text-zinc-300 group-hover:text-amber-400 transition-colors underline decoration-zinc-600">
-            4.9 / 5.0 (148 reseñas verificadas)
+            4.8 / 5.0 (148 reseñas verificadas)
           </span>
         </button>
 
