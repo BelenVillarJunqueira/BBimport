@@ -41,7 +41,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   return (
     <header className="sticky top-0 z-40 w-full bg-[#0D0D0D]/95 backdrop-blur-md border-b border-white/10">
       {/* Top Announcement Bar */}
-      <div className="bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 text-black py-1.5 px-4 text-xs font-bold text-center flex items-center justify-center gap-2 tracking-wide overflow-hidden shadow-sm">
+      <div className="bg-linear-to-r from-amber-600 via-amber-500 to-amber-600 text-black py-1.5 px-4 text-xs font-bold text-center flex items-center justify-center gap-2 tracking-wide overflow-hidden shadow-sm">
         <Truck className="w-3.5 h-3.5 shrink-0" />
         <span className="truncate">{content.topBannerText}</span>
         <ShieldCheck className="w-3.5 h-3.5 shrink-0 hidden sm:inline" />

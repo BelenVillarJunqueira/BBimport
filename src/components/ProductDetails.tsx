@@ -161,7 +161,7 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({
               <button
                 key={v.id}
                 onClick={() => onSelectVariant(v)}
-                className={`relative p-3 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between min-h-[72px] ${
+                className={`relative p-3 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between min-h-18 ${
                   isSelected
                     ? 'border-amber-500 bg-amber-500/10 ring-1 ring-amber-500/30'
                     : 'border-white/10 bg-[#121212] hover:bg-white/5'
