@@ -73,7 +73,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={onScrollToReviews}
               className="hover:text-white transition-colors cursor-pointer"
             >
-              RESEÑAS (4.9★)
+              RESEÑAS (4.8★)
             </button>
             <button
               onClick={onOpenTracking}
