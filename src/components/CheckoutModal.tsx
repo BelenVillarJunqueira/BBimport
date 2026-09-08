@@ -123,11 +123,11 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   // Payment Method: MERCADO PAGO IS THE FIRST AND DEFAULT METHOD
   const [paymentMethod, setPaymentMethod] = useState<'mercadopago' | 'contra_entrega' | 'transferencia' | 'tarjeta'>('mercadopago');
 
-  // Mercado Pago interactive installments (1, 3, 6, 12 cuotas)
-  const [selectedInstallments, setSelectedInstallments] = useState<number>(3);
+  // Mercado Pago states (Redirección directa sin cuotas en carrito)
   const [mpPreferenceUrl, setMpPreferenceUrl] = useState<string | null>(null);
   const [mpPreferenceId, setMpPreferenceId] = useState<string | null>(null);
   const [mpNotice, setMpNotice] = useState<string | null>(null);
+  const [mpOrderTracking, setMpOrderTracking] = useState<string | null>(null);
 
   // Card details
   const [cardNumber, setCardNumber] = useState('');
@@ -204,40 +204,6 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
     }).format(val);
   };
 
-  // Pre-calculated installments
-  const installmentOptions = [
-    {
-      count: 1,
-      label: '1 Pago Directo',
-      amountPerMonth: totalAmount,
-      totalPlan: totalAmount,
-      badge: 'Sin Interés'
-    },
-    {
-      count: 3,
-      label: '3 Cuotas',
-      amountPerMonth: Math.round(totalAmount / 3),
-      totalPlan: totalAmount,
-      badge: '¡Sin Interés!'
-    },
-    {
-      count: 6,
-      label: '6 Cuotas',
-      amountPerMonth: Math.round((totalAmount * 1.08) / 6),
-      totalPlan: Math.round(totalAmount * 1.08),
-      badge: 'Fijas'
-    },
-    {
-      count: 12,
-      label: '12 Cuotas',
-      amountPerMonth: Math.round((totalAmount * 1.18) / 12),
-      totalPlan: Math.round(totalAmount * 1.18),
-      badge: 'Fijas'
-    }
-  ];
-
-  const currentSelectedPlan = installmentOptions.find((p) => p.count === selectedInstallments) || installmentOptions[1];
-
   const copyToClipboard = (text: string, type: 'alias' | 'cbu' | 'mp') => {
     navigator.clipboard.writeText(text);
     if (type === 'alias') {
@@ -275,38 +241,48 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
     const trimmedCity = city.trim();
     const trimmedPostal = postalCode.trim();
 
-    // 1. Validar Nombre Completo (No permitir solo números como "1234" ni nombres de menos de 3 caracteres)
+    // 1. Validar Nombre Completo (No permitir solo números como "1234", ni nombres de menos de 4 caracteres, ni cadenas de prueba)
     if (!trimmedName) {
       setFormError('Por favor ingresa tu Nombre y Apellido completo.');
       return;
     }
-    if (/^[0-9\s.,-]+$/.test(trimmedName) || !/[a-zA-ZáéíóúÁÉÍÓÚñÑ]/.test(trimmedName) || trimmedName.length < 3) {
-      setFormError('Nombre inválido: Ingresa un nombre y apellido real (no se admiten solo números como "1234").');
+    const cleanNameLower = trimmedName.toLowerCase().replace(/[^a-z0-9áéíóúñ]/g, '');
+    const isFakeName = /^(1234|12345|asdf|qwerty|test|prueba|nombre|pepe|juan1234|prueba1234)$/.test(cleanNameLower);
+    const nameWords = trimmedName.split(/\s+/).filter((w) => w.length >= 2);
+    if (isFakeName || /^[0-9\s.,-]+$/.test(trimmedName) || !/[a-zA-ZáéíóúÁÉÍÓÚñÑ]/.test(trimmedName) || trimmedName.length < 4 || nameWords.length < 2) {
+      setFormError('Nombre inválido: Ingresa tu Nombre y Apellido real (ej: Carlos Gómez). No se admiten datos de prueba ni números como "1234".');
       return;
     }
 
-    // 2. Validar Teléfono / WhatsApp (Mínimo 8-10 dígitos, no permitir "1234" ni números falsos)
+    // 2. Validar Teléfono / WhatsApp (Mínimo 8-10 dígitos, no permitir "1234" ni números falsos o repetitivos)
     if (!trimmedPhone) {
       setFormError('Por favor ingresa tu número de Teléfono o WhatsApp de contacto.');
       return;
     }
     const cleanPhoneDigits = trimmedPhone.replace(/\D/g, '');
-    if (cleanPhoneDigits.length < 8 || cleanPhoneDigits.length > 15) {
-      setFormError('Teléfono inválido: Debe contener al menos 8 a 10 dígitos con código de área (ej: 11 4920-8831).');
-      return;
-    }
-    if (/^(\d)\1+$/.test(cleanPhoneDigits) || cleanPhoneDigits === '12345678') {
-      setFormError('Por favor ingresa un teléfono real para coordinar la entrega con Andreani.');
+    const isFakePhone =
+      cleanPhoneDigits.length < 8 ||
+      cleanPhoneDigits.length > 15 ||
+      /^(\d)\1+$/.test(cleanPhoneDigits) ||
+      cleanPhoneDigits.startsWith('1234') ||
+      cleanPhoneDigits.includes('123456') ||
+      cleanPhoneDigits === '12345678' ||
+      cleanPhoneDigits === '123456789' ||
+      cleanPhoneDigits === '1234567890';
+    if (isFakePhone) {
+      setFormError('Teléfono inválido: Debe contener al menos 8 a 10 dígitos reales con código de área (ej: 11 4920-8831).');
       return;
     }
 
-    // 3. Validar Dirección Completa (Debe incluir nombre de calle y numeración, no "1234")
+    // 3. Validar Dirección Completa (Debe incluir nombre de calle y numeración real, no "1234")
     if (!trimmedAddress) {
       setFormError('Por favor ingresa la dirección completa de entrega.');
       return;
     }
-    if (/^[0-9\s.,-]+$/.test(trimmedAddress) || !/[a-zA-ZáéíóúÁÉÍÓÚñÑ]/.test(trimmedAddress) || trimmedAddress.length < 5) {
-      setFormError('Dirección inválida: Debe contener el nombre de la calle y la altura (ej: Av. Rivadavia 4520).');
+    const cleanAddrLower = trimmedAddress.toLowerCase().replace(/[^a-z0-9]/g, '');
+    const isFakeAddress = /^(1234|calle1234|direccion1234|asdf|test|callefalsa123)$/.test(cleanAddrLower);
+    if (isFakeAddress || /^[0-9\s.,-]+$/.test(trimmedAddress) || !/[a-zA-ZáéíóúÁÉÍÓÚñÑ]/.test(trimmedAddress) || trimmedAddress.length < 5) {
+      setFormError('Dirección inválida: Debe contener el nombre de la calle y la altura real (ej: Av. Rivadavia 4520).');
       return;
     }
 
@@ -315,13 +291,15 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
       setFormError('Por favor ingresa tu ciudad o localidad.');
       return;
     }
-    if (/^[0-9\s.,-]+$/.test(trimmedCity) || !/[a-zA-ZáéíóúÁÉÍÓÚñÑ]/.test(trimmedCity) || trimmedCity.length < 3) {
+    const cleanCityLower = trimmedCity.toLowerCase().replace(/[^a-z0-9]/g, '');
+    const isFakeCity = /^(1234|ciudad|localidad|asdf|test)$/.test(cleanCityLower);
+    if (isFakeCity || /^[0-9\s.,-]+$/.test(trimmedCity) || !/[a-zA-ZáéíóúÁÉÍÓÚñÑ]/.test(trimmedCity) || trimmedCity.length < 3) {
       setFormError('Ciudad inválida: Ingresa una localidad o provincia real (ej: CABA, Rosario, Córdoba).');
       return;
     }
 
     // 5. Validar Código Postal si se completó
-    if (trimmedPostal && (trimmedPostal === '1234' || trimmedPostal.length < 3)) {
+    if (trimmedPostal && (trimmedPostal === '1234' || trimmedPostal.length < 3 || /^0+$/.test(trimmedPostal))) {
       setFormError('Por favor ingresa un código postal válido (ej: S2000 o 1425).');
       return;
     }
@@ -329,7 +307,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
     // 6. Validar datos de tarjeta directa si el método es tarjeta
     if (paymentMethod === 'tarjeta') {
       const cleanCard = cardNumber.replace(/\D/g, '');
-      if (cleanCard.length < 15 || cleanCard.length > 19 || cleanCard === '1234') {
+      if (cleanCard.length < 15 || cleanCard.length > 19 || cleanCard === '1234' || /^(\d)\1+$/.test(cleanCard)) {
         setFormError('Tarjeta inválida: Ingresa los 16 dígitos de tu tarjeta de crédito o débito.');
         return;
       }
@@ -339,7 +317,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
         return;
       }
       const cleanCvv = cardCvv.trim();
-      if (!/^\d{3,4}$/.test(cleanCvv) || cleanCvv === '1234') {
+      if (!/^\d{3,4}$/.test(cleanCvv) || cleanCvv === '1234' || /^0000?$/.test(cleanCvv)) {
         setFormError('CVV inválido: Ingresa el código de 3 o 4 números al dorso.');
         return;
       }
@@ -378,12 +356,11 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
               }
             ],
             payer: {
-              name: customerName.trim(),
+              name: trimmedName,
               email: email.trim() || 'cliente@bbimport.com',
-              phone: phone.trim(),
-              address: `${address.trim()}, ${city.trim()}`
+              phone: trimmedPhone,
+              address: `${trimmedAddress}, ${trimmedCity}`
             },
-            installments: selectedInstallments,
             trackingCode,
             customToken: gateways.mercadoPago?.accessToken || undefined
           })
@@ -395,19 +372,24 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
           generatedPrefId = data.preferenceId;
           setMpPreferenceUrl(data.initPoint);
           setMpPreferenceId(data.preferenceId);
-        } else if (data.error === 'TOKEN_NOT_CONFIGURED') {
-          setMpNotice(
-            'Para procesar pagos con tu cuenta en vivo, coloca tu MERCADO_PAGO_ACCESS_TOKEN en tu archivo .env. Mientras tanto, tu pedido quedó registrado y puedes abonar por transferencia o alias.'
-          );
+        } else {
+          setIsSubmitting(false);
+          const errorMsg = data.error === 'TOKEN_NOT_CONFIGURED'
+            ? 'No se detectó el Access Token de Mercado Pago. Puedes configurarlo en el Panel Administrador > Pasarelas de Pago.'
+            : (data.message || 'Error al conectar con Mercado Pago. Intenta nuevamente o selecciona otro medio de pago.');
+          setFormError(errorMsg);
+          return;
         }
-      } catch (err) {
-        console.warn('Preferencia Mercado Pago local o fallback:', err);
+      } catch (err: any) {
+        setIsSubmitting(false);
+        setFormError('Error de red al conectar con Mercado Pago. Por favor revisa tu conexión.');
+        return;
       }
     }
 
     const orderPaymentDescription =
       paymentMethod === 'mercadopago'
-        ? `Mercado Pago (${selectedInstallments} ${selectedInstallments === 1 ? 'pago directo' : 'cuotas fijas'})`
+        ? 'Mercado Pago Checkout Oficial'
         : paymentMethod === 'contra_entrega'
         ? 'Pago Contra Entrega en Efectivo'
         : paymentMethod === 'transferencia'
@@ -417,11 +399,11 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
     const order: Order = {
       id: `ord-${Date.now()}`,
       trackingCode,
-      customerName: customerName.trim(),
+      customerName: trimmedName,
       email: email.trim() || 'cliente@bbimport.com',
-      phone: phone.trim(),
-      address: address.trim(),
-      city: city.trim(),
+      phone: trimmedPhone,
+      address: trimmedAddress,
+      city: trimmedCity,
       postalCode: postalCode.trim() || 'N/A',
       notes: notes.trim(),
       items: [
@@ -439,22 +421,22 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
       total: totalAmount,
       paymentMethod,
       paymentStatus:
-        paymentMethod === 'contra_entrega'
-          ? 'A Cobrar al Entregar'
-          : paymentMethod === 'transferencia'
-          ? 'Pendiente de Comprobante'
-          : generatedMpUrl
+        paymentMethod === 'mercadopago'
           ? 'Preferencia Generada'
-          : 'Aprobado',
-      status: 'Confirmado',
+          : paymentMethod === 'contra_entrega'
+          ? 'A Cobrar al Entregar'
+          : 'Pendiente de Comprobante',
+      status: paymentMethod === 'mercadopago' ? 'Pendiente' : 'Confirmado',
       createdAt: nowIso,
       carrier: 'Andreani Prioritario Express',
       estimatedDelivery: '24 a 48 horas hábiles',
       timeline: [
         {
-          status: 'Confirmado',
+          status: paymentMethod === 'mercadopago' ? 'Pendiente' : 'Confirmado',
           timestamp: nowDisplay,
-          description: `Orden recibida exitosamente bajo modalidad ${orderPaymentDescription}`,
+          description: paymentMethod === 'mercadopago'
+            ? 'Orden iniciada para pago en Mercado Pago Checkout Oficial.'
+            : `Orden recibida exitosamente bajo modalidad ${orderPaymentDescription}`,
           location: 'Centro de Distribución BB IMPORT'
         },
         {
@@ -467,13 +449,8 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
     };
 
     onCreateOrder(order);
-    setCompletedOrder(order);
-    setIsSubmitting(false);
 
     // ================= SINCRONIZACIÓN ISAMER OS =================
-    // SKUs oficiales reconocidos automáticamente por ISAMER OS:
-    // 'EX5-BLK' (Negro), 'EX5-RED' (Rojo), 'EX5-BLU' (Azul), 'EX5-YEL' (Amarillo)
-    // 'CMB-DUO' (Pack Dúo), 'CMB-PRO-LOTION' (Combo Profesional)
     let isamerSku = 'EX5-BLK';
     const bundleTitleLower = (selectedBundle.title || '').toLowerCase();
     const bundleIdLower = (selectedBundle.id || '').toLowerCase();
@@ -519,45 +496,39 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
       order_id: trackingCode
     });
 
-    // Trigger celebration confetti
+    // If Mercado Pago with preference URL, initiate direct redirection
+    if (paymentMethod === 'mercadopago' && generatedMpUrl) {
+      setMpOrderTracking(trackingCode);
+      setMpRedirectTarget(generatedMpUrl);
+      setIsRedirectingToMp(true);
+      setIsSubmitting(false);
+
+      try {
+        if (typeof window !== 'undefined') {
+          if (window.self !== window.top) {
+            window.open(generatedMpUrl, '_blank');
+          } else {
+            window.location.href = generatedMpUrl;
+          }
+        }
+      } catch {
+        window.location.href = generatedMpUrl;
+      }
+      return;
+    }
+
+    // For other methods (contra_entrega, transferencia)
+    setCompletedOrder(order);
+    setIsSubmitting(false);
+
     try {
       confetti({
         particleCount: 120,
         spread: 80,
         origin: { y: 0.6 }
       });
-    } catch (err) {
+    } catch {
       // Safe fallback
-    }
-
-    // If Mercado Pago with preference URL, initiate redirect view & automatic redirect
-    if (paymentMethod === 'mercadopago' && generatedMpUrl) {
-      setIsRedirectingToMp(true);
-      setMpRedirectTarget(generatedMpUrl);
-
-      setTimeout(() => {
-        try {
-          if (typeof window !== 'undefined') {
-            if (window.self !== window.top) {
-              window.open(generatedMpUrl!, '_blank');
-            } else {
-              window.location.href = generatedMpUrl!;
-            }
-          }
-        } catch {
-          window.location.href = generatedMpUrl!;
-        }
-      }, 1200);
-      return;
-    }
-
-    // If generated preference URL exists for other cases
-    if (generatedMpUrl) {
-      try {
-        window.open(generatedMpUrl, '_blank');
-      } catch (e) {
-        // Pop-up blocked fallback
-      }
     }
   };
 
@@ -572,7 +543,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
     >
       <div className="relative w-full max-w-2xl bg-[#111111] border border-white/10 rounded-2xl shadow-2xl p-4 sm:p-8 space-y-6 my-auto sm:my-6 max-h-[94vh] sm:max-h-[90vh] overflow-y-auto">
         {/* Mercado Pago Official Redirect Screen */}
-        {isRedirectingToMp && mpRedirectTarget && completedOrder ? (
+        {isRedirectingToMp && mpRedirectTarget ? (
           <div className="space-y-6 text-center py-6">
             <div className="relative mx-auto w-20 h-20 flex items-center justify-center">
               <div className="absolute inset-0 rounded-full bg-sky-500/20 animate-ping" />
@@ -589,7 +560,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 Redirigiendo a Mercado Pago...
               </h2>
               <p className="text-xs sm:text-sm text-zinc-300 max-w-md mx-auto">
-                En segundos se abrirá el sitio oficial de Mercado Pago para que abones con tus tarjetas guardadas o tu dinero en cuenta.
+                En segundos se abrirá el sitio oficial de Mercado Pago para que abones con tus tarjetas guardadas, dinero en cuenta o débito.
               </p>
             </div>
 
@@ -608,7 +579,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 </div>
                 <div className="flex items-center gap-2.5">
                   <span className="w-5 h-5 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center font-bold text-xs shrink-0">✓</span>
-                  <span><strong>Mercado Crédito</strong> o hasta {selectedInstallments} cuotas fijas</span>
+                  <span><strong>Importe oficial exacto:</strong> {formatPrice(totalAmount)}</span>
                 </div>
               </div>
 
@@ -616,10 +587,12 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 <span className="text-zinc-400">Monto total:</span>
                 <strong className="text-white text-base">{formatPrice(totalAmount)}</strong>
               </div>
-              <div className="flex items-center justify-between text-xs font-mono">
-                <span className="text-zinc-400">Orden guardada en BB IMPORT:</span>
-                <strong className="text-amber-400">#{completedOrder.trackingCode}</strong>
-              </div>
+              {mpOrderTracking && (
+                <div className="flex items-center justify-between text-xs font-mono">
+                  <span className="text-zinc-400">Orden iniciada en BB IMPORT:</span>
+                  <strong className="text-amber-400">#{mpOrderTracking}</strong>
+                </div>
+              )}
             </div>
 
             <div className="space-y-3 max-w-md mx-auto">
@@ -630,7 +603,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 className="w-full py-4 px-6 bg-sky-500 hover:bg-sky-400 text-black font-black uppercase text-sm rounded-xl tracking-wider transition-all shadow-xl shadow-sky-500/25 flex items-center justify-center gap-2 cursor-pointer"
               >
                 <ExternalLink className="w-4 h-4" />
-                <span>Continuar a Mercado Pago Ahora ↗</span>
+                <span>Continuar a Mercado Pago Ahora ({formatPrice(totalAmount)}) ↗</span>
               </a>
 
               <p className="text-[11px] text-zinc-500">
@@ -642,12 +615,14 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                   type="button"
                   onClick={() => {
                     setIsRedirectingToMp(false);
-                    onOpenTrackingWithCode(completedOrder.trackingCode);
+                    if (mpOrderTracking) {
+                      onOpenTrackingWithCode(mpOrderTracking);
+                    }
                     onClose();
                   }}
                   className="text-xs text-zinc-400 hover:text-white underline cursor-pointer"
                 >
-                  Ver seguimiento del pedido #{completedOrder.trackingCode}
+                  {mpOrderTracking ? `Ver seguimiento del pedido #${mpOrderTracking}` : 'Cerrar ventana'}
                 </button>
               </div>
             </div>
@@ -705,25 +680,18 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                     <span>Pago con Mercado Pago</span>
                   </div>
                   <span className="text-[10px] bg-sky-500 text-black font-black px-2 py-0.5 rounded">
-                    {selectedInstallments} {selectedInstallments === 1 ? 'PAGO' : 'CUOTAS'}
+                    PAGO DIRECTO
                   </span>
                 </div>
 
                 <div className="p-3 bg-black/40 rounded-xl border border-sky-500/20 text-xs space-y-1">
                   <div className="flex justify-between text-zinc-300">
-                    <span>Plan seleccionado:</span>
-                    <strong className="text-white">{currentSelectedPlan.label}</strong>
+                    <span>Modalidad:</span>
+                    <strong className="text-white">Pago Directo Mercado Pago</strong>
                   </div>
                   <div className="flex justify-between text-zinc-300">
-                    <span>Monto por cuota:</span>
-                    <strong className="text-sky-300 font-mono font-bold">
-                      {formatPrice(currentSelectedPlan.amountPerMonth)}
-                      {currentSelectedPlan.count > 1 ? ' / mes' : ''}
-                    </strong>
-                  </div>
-                  <div className="flex justify-between text-zinc-300">
-                    <span>Total del plan:</span>
-                    <strong className="text-white font-mono">{formatPrice(currentSelectedPlan.totalPlan)}</strong>
+                    <span>Total a abonar:</span>
+                    <strong className="text-white font-mono">{formatPrice(totalAmount)}</strong>
                   </div>
                 </div>
 
@@ -736,7 +704,9 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                     className="w-full py-3.5 px-4 bg-sky-500 hover:bg-sky-400 text-black font-black uppercase text-xs rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 text-center"
                   >
                     <ExternalLink className="w-4 h-4" />
-                    <span>Abrir y Pagar en Mercado Pago ({selectedInstallments} Cuotas) ↗</span>
+                    <span>
+                      Abrir y Pagar en Mercado Pago ({formatPrice(totalAmount)}) ↗
+                    </span>
                   </a>
                 )}
 
@@ -1027,7 +997,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                               </span>
                             </p>
                             <p className="text-[11px] text-zinc-300 mt-1 leading-snug">
-                              Paga con tus <strong>tarjetas ya guardadas en tu cuenta de Mercado Pago</strong>, dinero en saldo disponible o hasta 12 Cuotas con todas las tarjetas. Redirección oficial segura.
+                              Abona en 1 pago directo con dinero en cuenta, tarjeta de débito o crédito directamente en la pasarela oficial de Mercado Pago.
                             </p>
                           </div>
                         </div>
@@ -1037,87 +1007,19 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                       {/* Mercado Pago Active Details when selected */}
                       {paymentMethod === 'mercadopago' && (
                         <div className="mt-3 pt-3 border-t border-sky-500/20 space-y-3 text-xs bg-black/60 p-3.5 rounded-xl">
-                          <div className="flex items-center justify-between">
-                            <span className="text-zinc-200 font-bold flex items-center gap-1.5">
-                              <span>Elige tu Plan de Cuotas:</span>
-                              <span className="text-[10px] text-zinc-400 font-normal">(Haz clic para elegir)</span>
-                            </span>
-                            <span className="text-[11px] font-mono text-sky-400 font-bold">
-                              {selectedInstallments} {selectedInstallments === 1 ? 'pago' : 'cuotas'} activo
-                            </span>
-                          </div>
-
-                          {/* Clickable, fully selectable installment buttons */}
-                          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px]">
-                            {installmentOptions.map((opt) => {
-                              const isSelected = selectedInstallments === opt.count;
-                              return (
-                                <button
-                                  key={opt.count}
-                                  type="button"
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    setSelectedInstallments(opt.count);
-                                  }}
-                                  className={`p-2.5 rounded-xl border text-center transition-all cursor-pointer relative flex flex-col items-center justify-between ${
-                                    isSelected
-                                      ? 'bg-sky-500/20 border-sky-400 ring-2 ring-sky-400/50 text-white shadow-lg'
-                                      : 'bg-zinc-900/80 border-white/10 text-zinc-400 hover:border-white/25 hover:text-zinc-200'
-                                  }`}
-                                >
-                                  <div className="flex items-center justify-between w-full mb-1">
-                                    <span
-                                      className={`text-[9px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${
-                                        isSelected
-                                          ? 'bg-sky-400 text-black'
-                                          : 'bg-white/10 text-zinc-400'
-                                      }`}
-                                    >
-                                      {opt.badge}
-                                    </span>
-                                    <span
-                                      className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center text-[9px] font-bold ${
-                                        isSelected
-                                          ? 'border-sky-400 bg-sky-400 text-black'
-                                          : 'border-zinc-600 text-transparent'
-                                      }`}
-                                    >
-                                      ✓
-                                    </span>
-                                  </div>
-
-                                  <span className="text-white font-black text-xs block">
-                                    {opt.label}
-                                  </span>
-                                  <strong
-                                    className={`font-mono text-xs block mt-0.5 ${
-                                      isSelected ? 'text-sky-300 font-bold' : 'text-zinc-300'
-                                    }`}
-                                  >
-                                    {formatPrice(opt.amountPerMonth)}
-                                    {opt.count > 1 ? '/mes' : ''}
-                                  </strong>
-                                </button>
-                              );
-                            })}
-                          </div>
-
-                          {/* Selected Plan Summary Banner */}
-                          <div className="p-2.5 bg-sky-950/60 border border-sky-500/40 rounded-xl flex items-center justify-between text-xs">
-                            <div className="flex items-center gap-2">
-                              <span className="w-2 h-2 rounded-full bg-sky-400 animate-ping" />
-                              <span className="text-zinc-200">
-                                Seleccionaste: <strong className="text-white">{currentSelectedPlan.label}</strong> de{' '}
-                                <strong className="text-sky-300 font-mono">
-                                  {formatPrice(currentSelectedPlan.amountPerMonth)}
-                                  {currentSelectedPlan.count > 1 ? ' al mes' : ''}
-                                </strong>
+                          <div className="p-3 bg-sky-950/40 border border-sky-500/30 rounded-xl space-y-1">
+                            <div className="flex items-center justify-between">
+                              <span className="text-sky-300 font-bold flex items-center gap-1.5">
+                                <span>Total a abonar:</span>
+                                <span className="bg-emerald-500/20 text-emerald-400 text-[10px] font-mono px-1.5 py-0.5 rounded font-bold">
+                                  PRECIO EXACTO
+                                </span>
                               </span>
+                              <strong className="text-white font-mono text-sm">{formatPrice(totalAmount)}</strong>
                             </div>
-                            <span className="text-[10px] text-sky-400 font-mono font-bold hidden sm:inline">
-                              Total: {formatPrice(currentSelectedPlan.totalPlan)}
-                            </span>
+                            <p className="text-[11px] text-zinc-400">
+                              Sin recargos ni diferencias: abonas exactamente el precio de BB IMPORT al ser redirigido a Mercado Pago.
+                            </p>
                           </div>
 
                           {/* MP Direct Link or Alias if configured */}
@@ -1139,7 +1041,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
 
                           <div className="p-2.5 bg-sky-500/10 border border-sky-500/20 rounded-lg flex items-center gap-2 text-sky-200 text-[11px]">
                             <ShieldCheck className="w-4 h-4 text-sky-400 shrink-0" />
-                            <span>Al presionar el botón se te redirigirá a la pasarela oficial de Mercado Pago para pagar con tus tarjetas guardadas o tu dinero en cuenta.</span>
+                            <span>Al presionar el botón serás redirigido directamente a Mercado Pago para confirmar tu pago de forma 100% segura.</span>
                           </div>
                         </div>
                       )}
@@ -1360,7 +1262,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                     </span>
                   ) : paymentMethod === 'mercadopago' ? (
                     <span>
-                      PAGAR CON MERCADO PAGO • {currentSelectedPlan.count === 1 ? formatPrice(totalAmount) : `${currentSelectedPlan.count}x ${formatPrice(currentSelectedPlan.amountPerMonth)}`}
+                      PAGAR CON MERCADO PAGO • {formatPrice(totalAmount)} ↗
                     </span>
                   ) : paymentMethod === 'contra_entrega' ? (
                     <span>CONFIRMAR PEDIDO (PAGAR AL RECIBIR)</span>
