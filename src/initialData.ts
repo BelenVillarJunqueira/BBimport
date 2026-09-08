@@ -15,13 +15,7 @@ export const initialMedia: MediaItem[] = [
     title: 'Corte y Perfilado de Alta Precisión',
     alt: 'Detalle de corte degradado y fade profesional'
   },
-  {
-    id: 'media-1788642092496-maao',
-    type: 'image',
-    url: '/uploads/media-1788642092496-maao.webp',
-    title: 'Cuchillas T-Blade Acero Carbono Zero-Gap',
-    alt: 'Cabezal T-Blade para corte al ras 0mm'
-  },
+
   {
     id: 'media-1788642063456-2sps',
     type: 'image',
@@ -93,7 +87,7 @@ export const initialVariants: ProductVariant[] = [
 export const initialBundles: BundleOffer[] = [
   {
     id: 'bundle-1',
-    title: '1x Máquina EXXTRA TECH™ EX5',
+    title: '1x Máquina EXXTRA TECH™',
     subtitle: 'Incluye Kit Completo (4 peines + cable USB + aceite + cepillo)',
     quantity: 1,
     price: 29999,
@@ -103,19 +97,19 @@ export const initialBundles: BundleOffer[] = [
   },
   {
     id: 'bundle-2',
-    title: '2x Máquinas EXXTRA TECH™ EX5 (Pack Dúo)',
-    subtitle: 'El favorito de Barberos y clientes. Ahorras $20.999 extra',
+    title: '2x Máquinas EXXTRA TECH™ (Pack Dúo)',
+    subtitle: 'El favorito de Barberos y Regalos. Ahorras $20.999 extra',
     quantity: 2,
     price: 54999,
     originalPrice: 75999,
-    discountPercentage: 25,
+    discountPercentage: 50,
     popular: true,
     badge: 'MEJOR VALOR ⭐ (25% OFF)'
   },
   {
     id: 'bundle-3',
-    title: '1x Máquina EXXTRA TECH™ EX5 + Loción post afeitado',
-    subtitle: 'Loción post afeitada profesional para piel sensible, 100ml',
+    title: '1x Máquina EXXTRA TECH™ + Loción post afeitado',
+    subtitle: 'Cuchilla de repuesto extra de cerámica fría de por vida',
     quantity: 1,
     price: 41999,
     originalPrice: 59999,
@@ -128,8 +122,8 @@ export const initialStoreContent: StoreContent = {
   storeName: 'BB IMPORT',
   tagline: 'Línea de Barbería & Peluquería Profesional',
   topBannerText: '🚚 ENVÍOS A TODO EL PAÍS (PAGAS AL RECIBIR) | ⚡ 25% OFF HASTA AGOTAR STOCK | 🔒 COMPRA 100% GARANTIZADA',
-  productTitle: 'Máquina Cortadora y Patillera EXXTRA TECH™ EX5 ',
-  productSubtitle: 'Corte al ras 0mm, degradados perfectos y perfilado de barba profesional con motor magnético silencioso de 7.000 RPM. Imagenes ilustrativas.',
+  productTitle: 'Máquina Cortadora y Patillera EXXTRA TECH™ EX5',
+  productSubtitle: 'Corte al ras 0mm, degradados perfectos y perfilado de barba profesional con motor magnético silencioso de 7.000 RPM. Imagenes ilustrativas. Garantía de 30 días.',
   badgeTag: 'N° 1 EN VENTAS PARA BARBEROS',
   regularPrice: 39999,
   salePrice: 29999,
@@ -138,7 +132,7 @@ export const initialStoreContent: StoreContent = {
   urgencyViewers: 34,
   stockLeft: 8,
   guaranteeDays: 30,
-  guaranteeTitle: 'Garantía Blindada de 30 Días BB IMPORT',
+  guaranteeTitle: 'Garantía Blindada de 30 Días',
   guaranteeDescription: 'Prueba la EXXTRA TECH™ en tu casa o barbería. Si no supera tus expectativas de corte, potencia y duración de batería, te devolvemos el 100% de tu dinero sin preguntas.',
   shippingHeadline: 'Despacho Exprés Inmediato con Seguro de Entrega',
   shippingSubtext: 'Enviamos a cualquier rincón del país por Correo Argentino / Andreani con código de rastreo en tiempo real.',
@@ -159,7 +153,9 @@ export const initialStoreContent: StoreContent = {
   facebookUrl: '',
   facebookPage: '',
   whatsappNumber: '+54 9 3515 05-6742',
-  supportEmail: 'bigbossimportaciones@gmail.com'
+  supportEmail: 'bigbossimportaciones@gmail.com',
+  metaPixelId: '',
+  metaPixelEnabled: true
 };
 
 export const initialOrders: Order[] = [
@@ -179,7 +175,7 @@ export const initialOrders: Order[] = [
         variantName: 'Negro Matte (Titanium Black)',
         quantity: 1,
         price: 29999,
-        bundleTitle: '1x Máquina EXXTRA TECH™ EX5'
+        bundleTitle: '1x Máquina EXXTRA TECH™ EX5 '
       }
     ],
     subtotal: 29999,
@@ -236,13 +232,13 @@ export const initialOrders: Order[] = [
         productName: 'Pack Dúo 2x EXXTRA TECH™ EX5',
         variantName: 'Rojo Carmín + Negro Matte',
         quantity: 2,
-        price: 59998,
+        price: 59999,
         bundleTitle: '2x Máquinas EXXTRA TECH™ EX5 (Pack Dúo)'
       }
     ],
-    subtotal: 59998,
+    subtotal: 59999,
     shippingCost: 0,
-    total: 59998,
+    total: 59999,
     paymentMethod: 'transferencia',
     paymentStatus: 'Aprobado',
     status: 'En Reparto',
@@ -355,7 +351,7 @@ export const initialReviews: Review[] = [
     title: 'Increíble potencia y cero tirones, la uso 8 horas al día',
     comment: 'Tengo mi barbería en Palermo y compré 2 máquinas para probarlas con los fades más exigentes. El motor vuela, corta al ras sin cortar la piel y la batería me aguanta casi 4 días con uso moderado. Excelente atención de BB IMPORT.',
     verifiedBuyer: true,
-    role: 'Barbero Profesional ',
+    role: 'Barbero Profesional',
     imageUrl: '/images/review-1.jpg'
   },
   {
@@ -373,9 +369,9 @@ export const initialReviews: Review[] = [
     author: 'Facundo D.',
     location: 'Rosario',
     rating: 5,
-    date: 'Hace 3 semanas',
+    date: 'Hace 5 días',
     title: 'Para perfilar la barba es lo mejor que existe',
-    comment: 'Siempre me costaba dejarme los bordes del cuello y las mejillas prolijos con afeitadoras comunes. La patillera EXXTRA TECH deja una línea como con navaja y no irrita para nada. Quedas prolijo y presentable para salir en poco tiempo y sin necesitar un peluquero. Vale cada peso.',
+    comment: 'Siempre me costaba dejarme los bordes del cuello y las mejillas prolijos con afeitadoras comunes. La patillera EXXTRA TECH deja una línea como con navaja y no irrita para nada. Vale cada peso.',
     verifiedBuyer: true,
     imageUrl: '/images/review-2.jpg'
   },
@@ -418,16 +414,16 @@ export const initialGateways: GatewaySettings = {
   enableTransfer: true,
   enableCards: true,
   mercadoPago: {
-    publicKey: 'APP_USR-fef5e2b4-0495-4fc7-90be-33760c4c04fb',
+    publicKey: 'APP_USR-7a6b980c-bbimport-prod-2025',
     accessToken: '',
-    paymentLinkUrl: '',
+    paymentLinkUrl: 'https://mpago.la/2vK8Xqp',
     mpAliasOrCvu: 'beluula.mp',
     environment: 'production',
     installmentsMax: 12
   },
   bank: {
     bankName: 'Banco Galicia',
-    accountHolder: 'BB IMPORT S.R.L.',
+    accountHolder: 'BB IMPORT ',
     cbu: '0070327530004092450465',
     alias: 'rbvillar3.gal',
     cuit: '23-37066549-4',
@@ -459,6 +455,6 @@ export const initialFaqs = [
   {
     id: 'faq-5',
     question: '¿Qué garantía tengo si el producto no me convence?',
-    answer: 'Cuentas con la Garantía BB IMPORT de 30 días. Si la máquina tiene algún desperfecto o no estás 100% satisfecho con su rendimiento, te la cambiamos inmediatamente por una nueva o te reembolsamos tu dinero.'
+    answer: 'Cuentas con la Garantía de 30 días. Si la máquina tiene algún desperfecto o no estás 100% satisfecho con su rendimiento, te la cambiamos inmediatamente por una nueva o te reembolsamos tu dinero.'
   }
 ];

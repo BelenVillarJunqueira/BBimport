@@ -40,9 +40,28 @@ import {
   Play,
   Star,
   RefreshCw,
-  CheckCircle
+  CheckCircle,
+  Activity,
+  Target,
+  Radio
 } from 'lucide-react';
 import { uploadMediaItem, uploadReviewImage } from '../utils/imageOptimizer';
+import { 
+  initMetaPixel, 
+  trackMetaPageView, 
+  trackMetaViewContent, 
+  trackMetaAddToCart, 
+  trackMetaInitiateCheckout, 
+  trackMetaAddPaymentInfo,
+  trackMetaPurchase, 
+  trackMetaLead, 
+  trackMetaContact, 
+  getMetaPixelEventLogs, 
+  clearMetaPixelEventLogs, 
+  subscribeToMetaEvents,
+  getActiveMetaPixelId,
+  MetaEventLog 
+} from '../utils/metaPixel';
 import { isUrlVideo, getMediaEmbedInfo, syncMediaWithServer, syncReviewsWithServer } from '../utils/mediaUtils';
 import { 
   GatewaySettings, 
@@ -92,7 +111,22 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   onSendPushNotification,
   notifications
 }) => {
-  const [activeTab, setActiveTab] = useState<'orders' | 'cms' | 'media' | 'reviews' | 'gateways' | 'analytics' | 'push'>('orders');
+  const [activeTab, setActiveTab] = useState<'orders' | 'cms' | 'media' | 'reviews' | 'gateways' | 'meta-ads' | 'analytics' | 'push'>('orders');
+
+  // Meta Pixel & Ads Management State
+  const [metaPixelIdInput, setMetaPixelIdInput] = useState<string>(() => {
+    return content.metaPixelId || localStorage.getItem('bbimport_meta_pixel_id') || '';
+  });
+  const [metaPixelLogs, setMetaPixelLogs] = useState<MetaEventLog[]>(() => getMetaPixelEventLogs());
+  const [metaSaveSuccess, setMetaSaveSuccess] = useState(false);
+  const [metaTestFeedback, setMetaTestFeedback] = useState<string>('');
+
+  React.useEffect(() => {
+    const unsubscribe = subscribeToMetaEvents((logs) => {
+      setMetaPixelLogs(logs);
+    });
+    return unsubscribe;
+  }, []);
 
   // Admin Authentication State (User and Password protected)
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
@@ -111,7 +145,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     e.preventDefault();
     const u = adminUsername.trim().toLowerCase();
     const p = adminPassword.trim();
-    if ((u === 'admin' || u === 'bbimport') && (p === 'bbimport2025' || p === 'admin' || p === 'admin123')) {
+    if ((u === 'admin' || u === 'bbimport') && (p === 'bbimport2025' || p === 'admin')) {
       try {
         sessionStorage.setItem('bbimport_admin_auth', 'true');
       } catch {
@@ -148,7 +182,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       publicKey: 'APP_USR-7a6b980c-bbimport-prod-2025',
       accessToken: '',
       paymentLinkUrl: 'https://mpago.la/2vK8Xqp',
-      mpAliasOrCvu: 'bbimport.mp',
+      mpAliasOrCvu: 'beluula.mp',
       environment: 'production',
       installmentsMax: 12
     }
@@ -293,6 +327,89 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     } finally {
       setIsUploadingMedia(false);
     }
+  };
+
+  const handleSaveMetaPixel = (e: React.FormEvent) => {
+    e.preventDefault();
+    const cleanId = metaPixelIdInput.trim();
+    onSaveContent({
+      ...content,
+      metaPixelId: cleanId,
+      metaPixelEnabled: true
+    });
+    try {
+      localStorage.setItem('bbimport_meta_pixel_id', cleanId);
+    } catch {
+      // safe
+    }
+    initMetaPixel(cleanId);
+    setMetaSaveSuccess(true);
+    setTimeout(() => setMetaSaveSuccess(false), 4000);
+  };
+
+  const handleTestMetaEvent = (eventType: string) => {
+    switch (eventType) {
+      case 'PageView':
+        trackMetaPageView({ test: true, page_title: 'Prueba Administrador BB IMPORT' });
+        setMetaTestFeedback('✅ Evento "PageView" emitido correctamente');
+        break;
+      case 'ViewContent':
+        trackMetaViewContent({
+          content_name: `${content.productTitle} (Prueba Admin)`,
+          content_ids: ['test-exxtra-01'],
+          value: content.salePrice,
+          currency: 'ARS'
+        });
+        setMetaTestFeedback('✅ Evento "ViewContent" emitido correctamente');
+        break;
+      case 'AddToCart':
+        trackMetaAddToCart({
+          content_name: `${content.productTitle} (Prueba Admin)`,
+          content_ids: ['test-combo-01'],
+          value: content.salePrice,
+          currency: 'ARS',
+          quantity: 1
+        });
+        setMetaTestFeedback('✅ Evento "AddToCart" emitido correctamente');
+        break;
+      case 'InitiateCheckout':
+        trackMetaInitiateCheckout({
+          content_name: `${content.productTitle} (Prueba Admin)`,
+          content_ids: ['test-combo-01'],
+          value: content.salePrice,
+          currency: 'ARS',
+          num_items: 1
+        });
+        setMetaTestFeedback('✅ Evento "InitiateCheckout" emitido correctamente');
+        break;
+      case 'AddPaymentInfo':
+        trackMetaAddPaymentInfo({
+          payment_type: 'mercadopago',
+          value: content.salePrice,
+          currency: 'ARS'
+        });
+        setMetaTestFeedback('✅ Evento "AddPaymentInfo" emitido correctamente');
+        break;
+      case 'Purchase':
+        trackMetaPurchase({
+          content_name: `${content.productTitle} (Prueba Admin)`,
+          content_ids: ['test-exxtra-01'],
+          value: content.salePrice,
+          currency: 'ARS',
+          num_items: 1,
+          order_id: `TEST-BB-${Math.floor(100000 + Math.random() * 900000)}`
+        });
+        setMetaTestFeedback('✅ Evento "Purchase" emitido correctamente');
+        break;
+      case 'Contact':
+        trackMetaContact({ method: 'whatsapp', test: true });
+        trackMetaLead({ source: 'test_admin' });
+        setMetaTestFeedback('✅ Eventos "Contact" y "Lead" emitidos correctamente');
+        break;
+      default:
+        break;
+    }
+    setTimeout(() => setMetaTestFeedback(''), 4500);
   };
 
   // Add external URL media (Social Reels, YouTube, MP4 or Images)
@@ -728,6 +845,21 @@ Cualquier consulta quedamos a tu disposición. ¡Muchas gracias por tu compra!`;
         </button>
 
         <button
+          onClick={() => setActiveTab('meta-ads')}
+          className={`px-4 py-2 rounded-xl text-xs font-bold transition-colors flex items-center gap-2 cursor-pointer shrink-0 ${
+            activeTab === 'meta-ads'
+              ? 'bg-[#1877F2] text-white shadow-lg shadow-[#1877F2]/25'
+              : 'text-zinc-400 hover:text-white hover:bg-white/5'
+          }`}
+        >
+          <Activity className="w-4 h-4 text-sky-300" />
+          <span>Meta Ads & Pixel (Facebook)</span>
+          {content.metaPixelId && (
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          )}
+        </button>
+
+        <button
           onClick={() => setActiveTab('analytics')}
           className={`px-4 py-2 rounded-xl text-xs font-bold transition-colors flex items-center gap-2 cursor-pointer shrink-0 ${
             activeTab === 'analytics'
@@ -1102,7 +1234,7 @@ Cualquier consulta quedamos a tu disposición. ¡Muchas gracias por tu compra!`;
                 </h4>
 
                 <div>
-                  <label className="flex text-xs font-bold text-zinc-400 mb-1 items-center gap-1.5">
+                  <label className="text-xs font-bold text-zinc-400 mb-1 flex items-center gap-1.5">
                     <Instagram className="w-3.5 h-3.5 text-pink-400" /> Enlace de Instagram
                   </label>
                   <input
@@ -1115,7 +1247,7 @@ Cualquier consulta quedamos a tu disposición. ¡Muchas gracias por tu compra!`;
                 </div>
 
                 <div>
-                  <label className="text-xs font-bold text-zinc-400 mb-1 flex items-center gap-1.5">
+                  <label className=" text-xs font-bold text-zinc-400 mb-1 flex items-center gap-1.5">
                     <Instagram className="w-3.5 h-3.5 text-pink-400" /> Usuario / Arroba de Instagram
                   </label>
                   <input
@@ -2488,6 +2620,445 @@ Cualquier consulta quedamos a tu disposición. ¡Muchas gracias por tu compra!`;
                 <Save className="w-4 h-4" />
                 <span>Guardar Todas las Reseñas</span>
               </button>
+            </div>
+          </div>
+        )}
+
+        {/* ================= TAB 8: META ADS & FACEBOOK PIXEL SUITE ================= */}
+        {activeTab === 'meta-ads' && (
+          <div className="space-y-8">
+            {/* Header with Meta branding & active status */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-white/10 pb-5">
+              <div>
+                <div className="flex items-center gap-2.5">
+                  <span className="p-2 rounded-xl bg-[#1877F2]/20 border border-[#1877F2]/40 text-[#1877F2]">
+                    <Activity className="w-5 h-5 text-[#1877F2]" />
+                  </span>
+                  <div>
+                    <h3 className="text-xl font-black text-white flex items-center gap-2">
+                      <span>Meta Ads & Pixel de Facebook</span>
+                      <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded-full bg-[#1877F2] text-white font-bold">
+                        Oficial
+                      </span>
+                    </h3>
+                    <p className="text-xs text-zinc-400 mt-0.5">
+                      Seguimiento de conversiones y eventos en tiempo real para campañas en Facebook, Instagram y Meta Ads Manager.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Status Badge */}
+              <div className="flex items-center gap-2">
+                {content.metaPixelId ? (
+                  <div className="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 px-3.5 py-1.5 rounded-xl text-xs text-emerald-400 font-bold">
+                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
+                    <span>Pixel Activo: <strong className="font-mono text-white">{content.metaPixelId}</strong></span>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 px-3.5 py-1.5 rounded-xl text-xs text-amber-400 font-bold">
+                    <span className="w-2.5 h-2.5 rounded-full bg-amber-400" />
+                    <span>Modo Simulación (Sin Pixel ID)</span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Test Feedback Toast if active */}
+            {metaTestFeedback && (
+              <div className="p-3.5 bg-emerald-500/20 border border-emerald-500/40 rounded-xl text-emerald-300 text-xs font-bold flex items-center gap-2 animate-fadeIn">
+                <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span>{metaTestFeedback}</span>
+              </div>
+            )}
+
+            {/* Config Card: Meta Pixel ID */}
+            <div className="p-6 bg-[#111] border border-white/10 rounded-2xl space-y-5">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/5 pb-3">
+                <div>
+                  <h4 className="text-sm font-black text-white uppercase tracking-wider flex items-center gap-2">
+                    <Target className="w-4 h-4 text-[#1877F2]" />
+                    <span>1. Configuración del Pixel ID de Meta</span>
+                  </h4>
+                  <p className="text-xs text-zinc-400 mt-1">
+                    Ingresa el identificador numérico de tu Pixel para comenzar a enviar eventos reales a Meta Events Manager.
+                  </p>
+                </div>
+
+                <a
+                  href="https://business.facebook.com/events_manager2/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs text-[#1877F2] hover:text-sky-300 font-bold flex items-center gap-1 shrink-0"
+                >
+                  <span>Abrir Meta Events Manager</span>
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </a>
+              </div>
+
+              <form onSubmit={handleSaveMetaPixel} className="space-y-4 max-w-2xl">
+                <div>
+                  <label className="block text-xs font-bold text-zinc-300 mb-1.5">
+                    Pixel ID (Conjunto de Datos de Meta)
+                  </label>
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <input
+                      type="text"
+                      placeholder="Ej: 1493028471920381"
+                      value={metaPixelIdInput}
+                      onChange={(e) => setMetaPixelIdInput(e.target.value)}
+                      className="flex-1 bg-[#18181B] border border-white/15 rounded-xl px-3.5 py-2.5 text-xs text-white font-mono placeholder:text-zinc-600 focus:outline-none focus:border-[#1877F2]"
+                    />
+                    <button
+                      type="submit"
+                      className="px-6 py-2.5 bg-[#1877F2] hover:bg-[#1565C0] text-white font-bold text-xs rounded-xl transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer shrink-0"
+                    >
+                      <Save className="w-4 h-4" />
+                      <span>Guardar y Activar Pixel</span>
+                    </button>
+                  </div>
+                  <p className="text-[11px] text-zinc-500 mt-1.5">
+                    Lo obtienes en <strong>business.facebook.com &gt; Orígenes de datos &gt; Píxeles / Conjuntos de datos</strong>.
+                  </p>
+                </div>
+
+                {metaSaveSuccess && (
+                  <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-emerald-400 text-xs font-bold flex items-center gap-2">
+                    <Check className="w-4 h-4" />
+                    <span>¡Pixel ID guardado y sincronizado con éxito! El script de Meta fbevents.js ha sido cargado.</span>
+                  </div>
+                )}
+              </form>
+
+              {/* Event Auto-Tracking Status List */}
+              <div className="pt-2">
+                <span className="text-[11px] uppercase font-bold text-zinc-400 block mb-2">
+                  Eventos Estándar Mapeados Automáticamente en BB IMPORT:
+                </span>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                  <div className="p-2.5 bg-[#18181B] border border-white/5 rounded-xl flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                    <div>
+                      <strong className="text-white block font-mono text-[11px]">PageView</strong>
+                      <span className="text-[10px] text-zinc-500">Carga del sitio</span>
+                    </div>
+                  </div>
+
+                  <div className="p-2.5 bg-[#18181B] border border-white/5 rounded-xl flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                    <div>
+                      <strong className="text-white block font-mono text-[11px]">ViewContent</strong>
+                      <span className="text-[10px] text-zinc-500">Ver producto o variante</span>
+                    </div>
+                  </div>
+
+                  <div className="p-2.5 bg-[#18181B] border border-white/5 rounded-xl flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                    <div>
+                      <strong className="text-white block font-mono text-[11px]">AddToCart</strong>
+                      <span className="text-[10px] text-zinc-500">Elegir combo o agregar</span>
+                    </div>
+                  </div>
+
+                  <div className="p-2.5 bg-[#18181B] border border-white/5 rounded-xl flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                    <div>
+                      <strong className="text-white block font-mono text-[11px]">InitiateCheckout</strong>
+                      <span className="text-[10px] text-zinc-500">Apertura del checkout</span>
+                    </div>
+                  </div>
+
+                  <div className="p-2.5 bg-[#18181B] border border-white/5 rounded-xl flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                    <div>
+                      <strong className="text-white block font-mono text-[11px]">AddPaymentInfo</strong>
+                      <span className="text-[10px] text-zinc-500">Elegir MP, Transfer o Entrega</span>
+                    </div>
+                  </div>
+
+                  <div className="p-2.5 bg-[#18181B] border border-white/5 rounded-xl flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                    <div>
+                      <strong className="text-amber-400 block font-mono text-[11px]">Purchase</strong>
+                      <span className="text-[10px] text-zinc-500">Pedido completado</span>
+                    </div>
+                  </div>
+
+                  <div className="p-2.5 bg-[#18181B] border border-white/5 rounded-xl flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                    <div>
+                      <strong className="text-white block font-mono text-[11px]">Lead</strong>
+                      <span className="text-[10px] text-zinc-500">Contacto con intención</span>
+                    </div>
+                  </div>
+
+                  <div className="p-2.5 bg-[#18181B] border border-white/5 rounded-xl flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                    <div>
+                      <strong className="text-white block font-mono text-[11px]">Contact</strong>
+                      <span className="text-[10px] text-zinc-500">Clic botón WhatsApp</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Test Event Dispatcher Buttons */}
+            <div className="p-6 bg-[#111] border border-white/10 rounded-2xl space-y-4">
+              <div>
+                <h4 className="text-sm font-black text-white uppercase tracking-wider flex items-center gap-2">
+                  <Play className="w-4 h-4 text-emerald-400" />
+                  <span>2. Consola de Pruebas de Eventos en Vivo</span>
+                </h4>
+                <p className="text-xs text-zinc-400 mt-1">
+                  Haz clic en cualquier botón para disparar el evento de prueba. Puedes verificarlo al instante en tu extensión <strong>Meta Pixel Helper</strong> o en la pestaña <strong>Probar eventos</strong> de Meta Events Manager.
+                </p>
+              </div>
+
+              <div className="flex flex-wrap gap-2.5 pt-1">
+                <button
+                  type="button"
+                  onClick={() => handleTestMetaEvent('PageView')}
+                  className="px-3.5 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-xs font-bold text-white flex items-center gap-1.5 transition-colors cursor-pointer"
+                >
+                  <span>🚀 Probar PageView</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleTestMetaEvent('ViewContent')}
+                  className="px-3.5 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-xs font-bold text-white flex items-center gap-1.5 transition-colors cursor-pointer"
+                >
+                  <span>👁️ Probar ViewContent</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleTestMetaEvent('AddToCart')}
+                  className="px-3.5 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-xs font-bold text-white flex items-center gap-1.5 transition-colors cursor-pointer"
+                >
+                  <span>🛒 Probar AddToCart</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleTestMetaEvent('InitiateCheckout')}
+                  className="px-3.5 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-xs font-bold text-white flex items-center gap-1.5 transition-colors cursor-pointer"
+                >
+                  <span>💳 Probar InitiateCheckout</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleTestMetaEvent('AddPaymentInfo')}
+                  className="px-3.5 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-xs font-bold text-white flex items-center gap-1.5 transition-colors cursor-pointer"
+                >
+                  <span>🏷️ Probar AddPaymentInfo</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleTestMetaEvent('Purchase')}
+                  className="px-3.5 py-2 bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 rounded-xl text-xs font-black text-emerald-400 flex items-center gap-1.5 transition-colors cursor-pointer shadow-md"
+                >
+                  <span>💰 Probar Purchase (Venta)</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleTestMetaEvent('Contact')}
+                  className="px-3.5 py-2 bg-green-500/10 hover:bg-green-500/20 border border-green-500/30 rounded-xl text-xs font-bold text-green-400 flex items-center gap-1.5 transition-colors cursor-pointer"
+                >
+                  <span>💬 Probar Contact (WhatsApp)</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Live Event Stream Monitor */}
+            <div className="p-6 bg-[#111] border border-white/10 rounded-2xl space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/5 pb-3">
+                <div>
+                  <h4 className="text-sm font-black text-white uppercase tracking-wider flex items-center gap-2">
+                    <Activity className="w-4 h-4 text-amber-400" />
+                    <span>3. Monitor en Vivo de Eventos Registrados ({metaPixelLogs.length})</span>
+                  </h4>
+                  <p className="text-xs text-zinc-400 mt-1">
+                    Feed de eventos capturados durante la navegación del usuario en la tienda.
+                  </p>
+                </div>
+
+                {metaPixelLogs.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => clearMetaPixelEventLogs()}
+                    className="text-xs text-zinc-400 hover:text-red-400 flex items-center gap-1 cursor-pointer transition-colors"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    <span>Limpiar Registro</span>
+                  </button>
+                )}
+              </div>
+
+              {metaPixelLogs.length === 0 ? (
+                <div className="p-8 text-center bg-[#18181B] rounded-xl border border-white/5 space-y-2">
+                  <Activity className="w-8 h-8 text-zinc-600 mx-auto" />
+                  <p className="text-xs text-zinc-400">
+                    Aún no se han emitido eventos en esta sesión. Navega por la tienda, añade productos al carrito o haz clic en "Probar eventos" arriba.
+                  </p>
+                </div>
+              ) : (
+                <div className="border border-white/10 rounded-xl overflow-hidden max-h-80 overflow-y-auto">
+                  <table className="w-full text-left text-xs">
+                    <thead className="bg-[#18181B] text-zinc-400 font-bold uppercase text-[10px] sticky top-0">
+                      <tr>
+                        <th className="p-3">Hora</th>
+                        <th className="p-3">Evento Meta</th>
+                        <th className="p-3">Parámetros Clave</th>
+                        <th className="p-3">Estado</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-white/5 font-mono">
+                      {metaPixelLogs.map((log) => (
+                        <tr key={log.id} className="hover:bg-white/5 transition-colors">
+                          <td className="p-3 text-zinc-400 text-[11px] whitespace-nowrap">
+                            {log.timestamp}
+                          </td>
+                          <td className="p-3">
+                            <span
+                              className={`px-2 py-0.5 rounded text-[11px] font-bold ${
+                                log.eventName === 'Purchase'
+                                  ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
+                                  : log.eventName === 'AddToCart'
+                                  ? 'bg-amber-500/20 text-amber-400 border border-amber-500/40'
+                                  : log.eventName === 'InitiateCheckout'
+                                  ? 'bg-sky-500/20 text-sky-400 border border-sky-500/40'
+                                  : log.eventName === 'Contact'
+                                  ? 'bg-green-500/20 text-green-400 border border-green-500/40'
+                                  : 'bg-white/10 text-white'
+                              }`}
+                            >
+                              {log.eventName}
+                            </span>
+                          </td>
+                          <td className="p-3 text-[11px] text-zinc-300">
+                            {log.params ? (
+                              <span>
+                                {log.params.value && (
+                                  <strong className="text-white mr-2">
+                                    ${log.params.value.toLocaleString('es-AR')} {log.params.currency || 'ARS'}
+                                  </strong>
+                                )}
+                                {log.params.content_name && (
+                                  <span className="text-zinc-400 truncate inline-block max-w-xs align-bottom">
+                                    {log.params.content_name}
+                                  </span>
+                                )}
+                                {log.params.payment_type && (
+                                  <span className="text-sky-300 ml-1">({log.params.payment_type})</span>
+                                )}
+                                {log.params.order_id && (
+                                  <span className="text-amber-400 ml-1">#{log.params.order_id}</span>
+                                )}
+                              </span>
+                            ) : (
+                              <span className="text-zinc-500">-</span>
+                            )}
+                          </td>
+                          <td className="p-3 whitespace-nowrap">
+                            {log.status === 'sent' ? (
+                              <span className="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded flex items-center gap-1 w-max">
+                                <Check className="w-3 h-3" /> Enviado a Meta
+                              </span>
+                            ) : log.status === 'simulated' ? (
+                              <span className="text-[10px] text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded flex items-center gap-1 w-max">
+                                Simulado en Local
+                              </span>
+                            ) : (
+                              <span className="text-[10px] text-red-400 bg-red-500/10 px-2 py-0.5 rounded flex items-center gap-1 w-max">
+                                Falló
+                              </span>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+
+            {/* Campaign Playbook / Strategy Guide for Meta Ads */}
+            <div className="p-6 bg-[#111] border border-white/10 rounded-2xl space-y-5">
+              <div>
+                <h4 className="text-sm font-black text-white uppercase tracking-wider flex items-center gap-2">
+                  <Target className="w-4 h-4 text-[#1877F2]" />
+                  <span>4. Estrategia y Pautas Recomendadas para BB IMPORT</span>
+                </h4>
+                <p className="text-xs text-zinc-400 mt-1">
+                  Cómo configurar tus campañas en el Administrador de Anuncios de Meta para maximizar el retorno de inversión (ROAS).
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* Strategy 1 */}
+                <div className="p-4 bg-[#18181B] border border-white/10 rounded-xl space-y-2.5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] uppercase font-mono text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded">
+                      Campaña #1 (Ventas)
+                    </span>
+                    <span className="text-xs font-bold text-zinc-400">Tráfico Frío</span>
+                  </div>
+                  <h5 className="text-xs font-black text-white">
+                    Conversión a Compra (Purchase)
+                  </h5>
+                  <p className="text-[11px] text-zinc-400 leading-relaxed">
+                    Crea una campaña con objetivo <strong>Ventas</strong> y optimiza al evento <strong>Comprar (Purchase)</strong>. Dirígela a barberos, estilistas y hombres de 20 a 55 años en toda Argentina destacando el <strong>Pago Contra Entrega al Recibir</strong>.
+                  </p>
+                </div>
+
+                {/* Strategy 2 */}
+                <div className="p-4 bg-[#18181B] border border-white/10 rounded-xl space-y-2.5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] uppercase font-mono text-amber-400 font-bold bg-amber-500/10 px-2 py-0.5 rounded">
+                      Campaña #2 (Retargeting)
+                    </span>
+                    <span className="text-xs font-bold text-zinc-400">Recuperación</span>
+                  </div>
+                  <h5 className="text-xs font-black text-white">
+                    Carritos Abandonados
+                  </h5>
+                  <p className="text-[11px] text-zinc-400 leading-relaxed">
+                    Crea un Público Personalizado en Meta con usuarios que dispararon <strong>AddToCart</strong> o <strong>InitiateCheckout</strong> en los últimos 7-14 días, y <strong>excluye a quienes ya compraron (Purchase)</strong>. Ofréceles un cupón o beneficio exclusivo.
+                  </p>
+                </div>
+
+                {/* Strategy 3 */}
+                <div className="p-4 bg-[#18181B] border border-white/10 rounded-xl space-y-2.5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] uppercase font-mono text-sky-400 font-bold bg-sky-500/10 px-2 py-0.5 rounded">
+                      Campaña #3 (WhatsApp)
+                    </span>
+                    <span className="text-xs font-bold text-zinc-400">Asistencia</span>
+                  </div>
+                  <h5 className="text-xs font-black text-white">
+                    Tráfico a Conversación / Lead
+                  </h5>
+                  <p className="text-[11px] text-zinc-400 leading-relaxed">
+                    Optimiza anuncios para clientes que dudan con el medio de pago o envíos al interior. El botón flotante y los enlaces disparan los eventos <strong>Contact</strong> y <strong>Lead</strong> para medir el costo por chat iniciado.
+                  </p>
+                </div>
+              </div>
+
+              {/* Verification Tips */}
+              <div className="p-4 bg-[#18181B]/60 border border-white/5 rounded-xl text-xs space-y-2">
+                <span className="font-bold text-white flex items-center gap-1.5 text-xs">
+                  <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                  ¿Cómo verificar que todo funcione con la extensión de Chrome?
+                </span>
+                <p className="text-[11px] text-zinc-400 leading-relaxed">
+                  Descarga gratis la extensión <strong>"Meta Pixel Helper"</strong> en la Chrome Web Store. Al navegar por tu tienda BB IMPORT verás que el icono se pone de color azul/verde y te mostrará los eventos <code className="text-white bg-black/40 px-1 py-0.5 rounded">PageView</code>, <code className="text-white bg-black/40 px-1 py-0.5 rounded">ViewContent</code>, <code className="text-white bg-black/40 px-1 py-0.5 rounded">AddToCart</code> y <code className="text-white bg-black/40 px-1 py-0.5 rounded">Purchase</code> con su valor en pesos argentinos.
+                </p>
+              </div>
             </div>
           </div>
         )}

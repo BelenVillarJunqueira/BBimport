@@ -1,5 +1,6 @@
 import React from 'react';
 import { MessageCircle } from 'lucide-react';
+import { trackMetaContact, trackMetaLead } from '../utils/metaPixel';
 
 interface WhatsAppButtonProps {
   whatsappNumber?: string;
@@ -8,7 +9,7 @@ interface WhatsAppButtonProps {
 }
 
 export const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({
-  whatsappNumber = '+549 3515 05-6742',
+  whatsappNumber = '+54 9 11 3840-2911',
   storeName = 'BB IMPORT',
   productTitle = 'Máquina cortadora EXXTRA TECH'
 }) => {
@@ -17,7 +18,19 @@ export const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({
   const message = encodeURIComponent(
     `¡Hola ${storeName}! 👋 Quiero consultar sobre la ${productTitle}. ¿Tienen stock para despacho inmediato?`
   );
-  const whatsappUrl = `https://wa.me/${cleanPhone || '549 3515 05-6742'}?text=${message}`;
+  const whatsappUrl = `https://wa.me/${cleanPhone || '5491138402911'}?text=${message}`;
+
+  const handleClickWhatsApp = () => {
+    trackMetaContact({
+      method: 'whatsapp',
+      product: productTitle,
+      store: storeName
+    });
+    trackMetaLead({
+      content_name: `WhatsApp Lead - ${productTitle}`,
+      currency: 'ARS'
+    });
+  };
 
   return (
     <div className="fixed bottom-20 sm:bottom-6 right-4 sm:right-6 z-40 pointer-events-auto">
@@ -26,6 +39,7 @@ export const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({
         href={whatsappUrl}
         target="_blank"
         rel="noopener noreferrer"
+        onClick={handleClickWhatsApp}
         id="floating-whatsapp-btn"
         className="group relative flex items-center justify-center w-13 h-13 sm:w-14 sm:h-14 bg-[#25D366] hover:bg-[#20bd5a] text-white rounded-full shadow-2xl transition-all duration-300 transform hover:scale-110 active:scale-95 focus:outline-none"
         title="Contactar por WhatsApp a BB IMPORT"

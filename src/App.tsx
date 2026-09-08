@@ -39,6 +39,13 @@ import {
   loadReviewsFromServer, 
   syncReviewsWithServer 
 } from './utils/mediaUtils';
+import { 
+  initMetaPixel, 
+  trackMetaPageView, 
+  trackMetaViewContent, 
+  trackMetaAddToCart, 
+  trackMetaInitiateCheckout 
+} from './utils/metaPixel';
 
 // Fail-safe storage helpers to prevent any QuotaExceededError or JSON parse errors
 function safeGet<T>(key: string, fallback: T): T {
@@ -142,7 +149,7 @@ export default function App() {
     return safeGet<PushNotification[]>('bbimport_notifications', [
       {
         id: 'push-welcome',
-        title: '🚚 Envío Gratis en todo el país',
+        title: '🚚 Envíos en todo el país',
         body: 'Aprovecha el 25% OFF en la línea EXXTRA TECH™ de BB IMPORT. Pagas en mano al recibir.',
         timestamp: 'Ahora',
         read: false
@@ -282,16 +289,72 @@ export default function App() {
     safeSet('bbimport_notifications', notifications);
   }, [notifications]);
 
+  // Initialize Meta Ads / Facebook Pixel
+  useEffect(() => {
+    initMetaPixel(content.metaPixelId);
+    trackMetaPageView({ page_title: document.title, page_location: window.location.href });
+    if (content.productTitle) {
+      trackMetaViewContent({
+        content_name: content.productTitle,
+        content_ids: [selectedVariant.id || 'exxtra-gold'],
+        value: selectedBundle?.price || content.salePrice,
+        currency: 'ARS'
+      });
+    }
+  }, []);
+
+  // Update Meta Pixel ID if changed from Admin Panel
+  useEffect(() => {
+    if (content.metaPixelId) {
+      initMetaPixel(content.metaPixelId);
+    }
+  }, [content.metaPixelId]);
+
   // Handlers
+  const handleSelectVariant = (variant: ProductVariant) => {
+    setSelectedVariant(variant);
+    trackMetaViewContent({
+      content_name: `${content.productTitle} - ${variant.name}`,
+      content_ids: [variant.id],
+      value: selectedBundle?.price || content.salePrice,
+      currency: 'ARS'
+    });
+  };
+
+  const handleSelectBundle = (bundle: BundleOffer) => {
+    setSelectedBundle(bundle);
+    trackMetaAddToCart({
+      content_name: `${content.productTitle} (${bundle.title})`,
+      content_ids: [bundle.id],
+      value: bundle.price,
+      currency: 'ARS',
+      quantity: bundle.quantity || 1
+    });
+  };
+
   const handleBuyNow = () => {
     if (cartCount === 0) {
       setCartCount(1);
     }
+    trackMetaInitiateCheckout({
+      content_name: `${content.productTitle} - ${selectedBundle.title}`,
+      content_ids: [selectedVariant.id, selectedBundle.id],
+      value: selectedBundle.price,
+      currency: 'ARS',
+      num_items: selectedBundle.quantity || 1
+    });
     setIsCheckoutOpen(true);
   };
 
   const handleAddToCart = () => {
     setCartCount((prev) => (prev === 0 ? 1 : prev + 1));
+    trackMetaAddToCart({
+      content_name: `${content.productTitle} - ${selectedVariant.name} (${selectedBundle.title})`,
+      content_ids: [selectedVariant.id, selectedBundle.id],
+      value: selectedBundle.price,
+      currency: 'ARS',
+      quantity: selectedBundle.quantity || 1
+    });
     setIsCheckoutOpen(true);
   };
 
@@ -457,9 +520,9 @@ export default function App() {
                 variants={variants}
                 bundles={bundles}
                 selectedVariant={selectedVariant}
-                onSelectVariant={setSelectedVariant}
+                onSelectVariant={handleSelectVariant}
                 selectedBundle={selectedBundle}
-                onSelectBundle={setSelectedBundle}
+                onSelectBundle={handleSelectBundle}
                 onBuyNow={handleBuyNow}
                 onAddToCart={handleAddToCart}
                 onScrollToReviews={scrollToReviews}

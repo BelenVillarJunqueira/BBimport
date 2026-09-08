@@ -127,6 +127,8 @@ export interface StoreContent {
   facebookPage?: string;
   whatsappNumber?: string;
   supportEmail?: string;
+  metaPixelId?: string;
+  metaPixelEnabled?: boolean;
 }
 
 export interface MercadoPagoSettings {

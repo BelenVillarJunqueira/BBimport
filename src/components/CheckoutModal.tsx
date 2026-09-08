@@ -19,6 +19,11 @@ import {
   ShoppingBag
 } from 'lucide-react';
 import { BundleOffer, GatewaySettings, Order, ProductVariant, StoreContent } from '../types';
+import { 
+  trackMetaInitiateCheckout, 
+  trackMetaAddPaymentInfo, 
+  trackMetaPurchase 
+} from '../utils/metaPixel';
 
 interface CheckoutModalProps {
   isOpen: boolean;
@@ -147,8 +152,35 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
     if (!isOpen) {
       setIsRedirectingToMp(false);
       setMpRedirectTarget(null);
+    } else {
+      // Track Meta InitiateCheckout event when modal is opened
+      const amount = selectedBundle ? selectedBundle.price : content.salePrice;
+      trackMetaInitiateCheckout({
+        content_name: `${content.productTitle} (${selectedBundle?.title || 'Combo'})`,
+        content_ids: [selectedVariant?.id || 'exxtra-gold', selectedBundle?.id || 'b1'],
+        value: amount,
+        currency: 'ARS',
+        num_items: selectedBundle?.quantity || 1
+      });
     }
   }, [isOpen]);
+
+  // Track Meta AddPaymentInfo when payment method is selected or changed
+  const isInitialPaymentRender = React.useRef(true);
+  useEffect(() => {
+    if (isInitialPaymentRender.current) {
+      isInitialPaymentRender.current = false;
+      return;
+    }
+    if (isOpen) {
+      const amount = selectedBundle ? selectedBundle.price : content.salePrice;
+      trackMetaAddPaymentInfo({
+        payment_type: paymentMethod,
+        value: amount,
+        currency: 'ARS'
+      });
+    }
+  }, [paymentMethod, isOpen]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -474,6 +506,17 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
       paymentMethod: paymentMethod === 'mercadopago' ? 'mercadopago_qr' : paymentMethod,
       address: trimmedAddress,
       city: trimmedCity
+    });
+
+    // Trigger Meta Ads / Facebook Pixel Purchase Event
+    trackMetaPurchase({
+      content_name: `${content.productTitle} - ${selectedVariant.name} (${selectedBundle.title})`,
+      content_ids: [isamerSku, selectedBundle.id],
+      content_type: 'product',
+      value: totalAmount,
+      currency: 'ARS',
+      num_items: selectedBundle.quantity || 1,
+      order_id: trackingCode
     });
 
     // Trigger celebration confetti
