@@ -154,12 +154,12 @@ export const initialStoreContent: StoreContent = {
     '1x Frasco Gotero de Aceite Lubricante para Cuchillas',
     '1x Manual Oficial de Uso & Certificado de Garantía BB IMPORT'
   ],
-  instagramUrl: 'https://instagram.com/bbimport_oficial',
-  instagramHandle: '@bbimport_oficial',
-  facebookUrl: 'https://facebook.com/bbimport.profesional',
-  facebookPage: 'BB Import Profesional Oficial',
-  whatsappNumber: '+54 9 11 3840-2911',
-  supportEmail: 'ventas@bbimport.com.ar',
+  instagramUrl: 'https://www.instagram.com/bigboss_import/',
+  instagramHandle: '@bigboss_import',
+  facebookUrl: 'https://www.facebook.com/profile.php?id=61594364275640',
+  facebookPage: 'BB Import',
+  whatsappNumber: '+54 9 35156742',
+  supportEmail: 'bigbossimportaciones@gmail.com',
   metaPixelId: '',
   metaPixelEnabled: true
 };

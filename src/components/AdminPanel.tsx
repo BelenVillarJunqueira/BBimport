@@ -145,7 +145,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     e.preventDefault();
     const u = adminUsername.trim().toLowerCase();
     const p = adminPassword.trim();
-    if ((u === 'admin' || u === 'bbimport') && (p === 'bbimport2025' || p === 'admin' || p === 'admin123')) {
+    if ((u === 'admin' || u === 'bbimport') && (p === 'bbimport2025' || p === 'admin' || p === '2222')) {
       try {
         sessionStorage.setItem('bbimport_admin_auth', 'true');
       } catch {
