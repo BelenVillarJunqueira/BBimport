@@ -69,7 +69,7 @@ export const FaqSection: React.FC = () => {
             </div>
           </div>
           <a
-            href="https://wa.me/?text=Hola%20BB%20IMPORT,%20quiero%20hacer%20una%20consulta%20sobre%20la%20m%C3%A1quina%20cortadora%20EXXTRA%20TECH"
+            href="https://wa.me/+5493515056742?text=Hola%20BB%20IMPORT,%20quiero%20hacer%20una%20consulta%20sobre%20la%20m%C3%A1quina%20cortadora%20EXXTRA%20TECH"
             target="_blank"
             rel="noreferrer"
             className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-all shadow-md shrink-0"
