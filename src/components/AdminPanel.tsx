@@ -145,7 +145,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     e.preventDefault();
     const u = adminUsername.trim().toLowerCase();
     const p = adminPassword.trim();
-    if ((u === 'admin' || u === 'bbimport') && (p === 'bbimport2025' || p === 'admin')) {
+    if ((u === 'admin' || u === 'bbimport') && (p === 'bbimport2025' || p === 'admin' || p === 'admin123')) {
       try {
         sessionStorage.setItem('bbimport_admin_auth', 'true');
       } catch {
@@ -181,10 +181,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     mercadoPago: gateways.mercadoPago || {
       publicKey: 'APP_USR-7a6b980c-bbimport-prod-2025',
       accessToken: '',
-      paymentLinkUrl: 'https://mpago.la/2vK8Xqp',
-      mpAliasOrCvu: 'beluula.mp',
+      paymentLinkUrl: '',
+      mpAliasOrCvu: 'bbimport.mp',
       environment: 'production',
-      installmentsMax: 12
+      installmentsMax: 1
     }
   }));
   const [gatewaySavedAlert, setGatewaySavedAlert] = useState(false);
@@ -728,6 +728,11 @@ Cualquier consulta quedamos a tu disposición. ¡Muchas gracias por tu compra!`;
               Volver a la Tienda
             </button>
           </form>
+
+          <div className="p-3 bg-white/5 border border-white/10 rounded-xl text-[11px] text-zinc-400 text-center">
+            <span className="text-zinc-500 block mb-0.5">Credenciales iniciales de seguridad:</span>
+            Usuario: <strong className="text-amber-400 font-mono">admin</strong> • Contraseña: <strong className="text-amber-400 font-mono">bbimport2025</strong>
+          </div>
         </div>
       </div>
     );
@@ -744,7 +749,7 @@ Cualquier consulta quedamos a tu disposición. ¡Muchas gracias por tu compra!`;
               PANEL ADMIN
             </span>
           </span>
-          <span className="hidden lg:flex text-xs text-emerald-400 font-mono items-center gap-1.5">
+          <span className="hidden lg:inline text-xs text-emerald-400 font-mono flex items-center gap-1.5">
             <Lock className="w-3 h-3" /> Panel Oculto: Inaccesible para clientes
           </span>
         </div>
@@ -952,7 +957,7 @@ Cualquier consulta quedamos a tu disposición. ¡Muchas gracias por tu compra!`;
                       </tr>
                     ) : (
                       filteredOrders.map((ord) => (
-                        <tr key={ord.id} className="hover:bg-white/2 transition-colors">
+                        <tr key={ord.id} className="hover:bg-white/[0.02] transition-colors">
                           <td className="py-3.5 px-4 font-mono font-bold text-amber-400">
                             {ord.trackingCode}
                             <div className="text-[10px] text-zinc-500 font-sans">
@@ -965,7 +970,7 @@ Cualquier consulta quedamos a tu disposición. ¡Muchas gracias por tu compra!`;
                           </td>
                           <td className="py-3.5 px-4">
                             <p className="font-medium text-white">{ord.city}</p>
-                            <p className="text-[10px] text-zinc-500 truncate max-w-37.5">{ord.address}</p>
+                            <p className="text-[10px] text-zinc-500 truncate max-w-[150px]">{ord.address}</p>
                           </td>
                           <td className="py-3.5 px-4">
                             <span className="text-zinc-200 font-medium">
@@ -1234,7 +1239,7 @@ Cualquier consulta quedamos a tu disposición. ¡Muchas gracias por tu compra!`;
                 </h4>
 
                 <div>
-                  <label className="text-xs font-bold text-zinc-400 mb-1 flex items-center gap-1.5">
+                  <label className="block text-xs font-bold text-zinc-400 mb-1 flex items-center gap-1.5">
                     <Instagram className="w-3.5 h-3.5 text-pink-400" /> Enlace de Instagram
                   </label>
                   <input
@@ -1247,7 +1252,7 @@ Cualquier consulta quedamos a tu disposición. ¡Muchas gracias por tu compra!`;
                 </div>
 
                 <div>
-                  <label className=" text-xs font-bold text-zinc-400 mb-1 flex items-center gap-1.5">
+                  <label className="block text-xs font-bold text-zinc-400 mb-1 flex items-center gap-1.5">
                     <Instagram className="w-3.5 h-3.5 text-pink-400" /> Usuario / Arroba de Instagram
                   </label>
                   <input
@@ -1260,7 +1265,7 @@ Cualquier consulta quedamos a tu disposición. ¡Muchas gracias por tu compra!`;
                 </div>
 
                 <div>
-                  <label className="text-xs font-bold text-zinc-400 mb-1 flex items-center gap-1.5">
+                  <label className="block text-xs font-bold text-zinc-400 mb-1 flex items-center gap-1.5">
                     <Facebook className="w-3.5 h-3.5 text-blue-400" /> Enlace de Facebook
                   </label>
                   <input
@@ -1273,7 +1278,7 @@ Cualquier consulta quedamos a tu disposición. ¡Muchas gracias por tu compra!`;
                 </div>
 
                 <div>
-                  <label className="text-xs font-bold text-zinc-400 mb-1 flex items-center gap-1.5">
+                  <label className="block text-xs font-bold text-zinc-400 mb-1 flex items-center gap-1.5">
                     <Facebook className="w-3.5 h-3.5 text-blue-400" /> Nombre de Página de Facebook
                   </label>
                   <input
@@ -1287,7 +1292,7 @@ Cualquier consulta quedamos a tu disposición. ¡Muchas gracias por tu compra!`;
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="text-xs font-bold text-zinc-400 mb-1 flex items-center gap-1.5">
+                    <label className="block text-xs font-bold text-zinc-400 mb-1 flex items-center gap-1.5">
                       <MessageCircle className="w-3.5 h-3.5 text-emerald-400" /> WhatsApp Oficial
                     </label>
                     <input
@@ -1538,7 +1543,7 @@ Cualquier consulta quedamos a tu disposición. ¡Muchas gracias por tu compra!`;
                 <button
                   type="button"
                   onClick={handleAddMediaUrl}
-                  className="w-full py-2.5 bg-linear-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-black text-xs uppercase rounded-xl transition-all shadow-lg cursor-pointer"
+                  className="w-full py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-black text-xs uppercase rounded-xl transition-all shadow-lg cursor-pointer"
                 >
                   Agregar como Principal (#1) al Sitio Web
                 </button>
@@ -1571,7 +1576,7 @@ Cualquier consulta quedamos a tu disposición. ¡Muchas gracias por tu compra!`;
                             {itemEmbed.platform === 'native_video' ? (
                               <video src={`${itemUrl}#t=0.5`} className="w-full h-full object-cover" muted preload="metadata" />
                             ) : (
-                              <div className="flex flex-col items-center justify-center p-3 text-center bg-linear-to-tr from-red-600/30 via-zinc-900 to-black w-full h-full">
+                              <div className="flex flex-col items-center justify-center p-3 text-center bg-gradient-to-tr from-red-600/30 via-zinc-900 to-black w-full h-full">
                                 <Film className="w-8 h-8 text-amber-400 mb-1" />
                                 <span className="text-[10px] text-zinc-400 font-mono">{itemEmbed.titleHint || 'Reel / Video'}</span>
                               </div>
@@ -1828,18 +1833,17 @@ Cualquier consulta quedamos a tu disposición. ¡Muchas gracias por tu compra!`;
 
                 <div className="p-3 bg-sky-950/30 border border-sky-500/20 rounded-xl text-xs text-sky-200 space-y-1">
                   <p className="font-bold text-sky-300">
-                    💰 ¿Cómo configurar para que el dinero llegue directamente a tu cuenta de Mercado Pago?
+                    💰 Cobro Automático del Precio Exacto de las Máquinas:
                   </p>
                   <p className="text-[11px] text-zinc-300">
-                    1. Entra a tu cuenta en mercadopago.com.ar o en la app y genera un <strong>Link de Pago</strong> con el monto de tu producto o copia tu <strong>Alias / CVU</strong>.<br />
-                    2. Pégalo en el campo <strong>Enlace de Pago Oficial</strong> o <strong>Alias de Mercado Pago</strong> abajo.<br />
-                    3. Al finalizar una compra con Mercado Pago, el cliente podrá pagar directamente a tu cuenta oficial y recibirás el dinero al instante.
+                    • <strong>Recomendado (Precio Dinámico Exacto):</strong> Ingresa tu <strong>Access Token</strong> abajo. El sistema genera automáticamente el cobro en Mercado Pago con el precio exacto del producto o combo seleccionado en la página (individual, Pack Dúo o Pack Trío).<br />
+                    • <strong>Opcional (Link fijo):</strong> Si utilizas un enlace manual de Link de Pago (mpago.la), recuerda que ese link cobrará únicamente el monto fijo con el que lo hayas creado en Mercado Pago.
                   </p>
                 </div>
 
                 <div>
                   <label className="block text-xs font-bold text-zinc-300 mb-1">
-                    Enlace de Pago Oficial (Link de Mercado Pago / Point / Checkout Pro)
+                    Enlace de Pago Manual Opcional (Link de Mercado Pago / Point)
                   </label>
                   <div className="flex gap-2">
                     <input
@@ -1852,12 +1856,12 @@ Cualquier consulta quedamos a tu disposición. ¡Muchas gracias por tu compra!`;
                             publicKey: '',
                             accessToken: '',
                             environment: 'production',
-                            installmentsMax: 12
+                            installmentsMax: 1
                           }),
                           paymentLinkUrl: e.target.value
                         }
                       })}
-                      placeholder="https://mpago.la/2vK8Xqp"
+                      placeholder="https://mpago.la/..."
                       className="flex-1 bg-[#18181B] border border-white/10 rounded-xl px-3 py-2 text-xs text-white font-mono placeholder:text-zinc-600 focus:outline-none focus:border-sky-500"
                     />
                     {editableGateways.mercadoPago?.paymentLinkUrl && (
@@ -1872,7 +1876,7 @@ Cualquier consulta quedamos a tu disposición. ¡Muchas gracias por tu compra!`;
                     )}
                   </div>
                   <p className="text-[10px] text-zinc-500 mt-1">
-                    Ejemplo: https://mpago.la/2vK8Xqp generado desde tu panel de cobros de Mercado Pago.
+                    Opcional como respaldo si no utilizas Access Token. Con Access Token el precio se calcula automáticamente al instante.
                   </p>
                 </div>
 
@@ -1904,33 +1908,109 @@ Cualquier consulta quedamos a tu disposición. ¡Muchas gracias por tu compra!`;
                     </p>
                   </div>
 
-                  <div>
-                    <label className="block text-xs font-bold text-zinc-300 mb-1">
-                      Máximo de Cuotas Habilitadas
-                    </label>
-                    <select
-                      value={editableGateways.mercadoPago?.installmentsMax || 12}
-                      onChange={(e) => setEditableGateways({
-                        ...editableGateways,
-                        mercadoPago: {
-                          ...(editableGateways.mercadoPago || {
-                            publicKey: '',
-                            accessToken: '',
-                            environment: 'production'
-                          }),
-                          installmentsMax: Number(e.target.value)
-                        }
-                      })}
-                      className="w-full bg-[#18181B] border border-white/10 rounded-xl px-3 py-2 text-xs text-white font-mono focus:outline-none focus:border-sky-500"
-                    >
-                      <option value={1}>1 Cuota (Sin financiación)</option>
-                      <option value={3}>Hasta 3 Cuotas</option>
-                      <option value={6}>Hasta 6 Cuotas</option>
-                      <option value={12}>Hasta 12 Cuotas (Recomendado)</option>
-                    </select>
-                    <p className="text-[10px] text-zinc-500 mt-1">
-                      Se calcularán automáticamente los planes de cuotas en el checkout.
-                    </p>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <label className="block text-xs font-bold text-zinc-300">
+                        Financiación y Cuotas
+                      </label>
+                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${
+                        (editableGateways.mercadoPago?.installmentsMax || 1) > 1
+                          ? 'bg-sky-500/20 text-sky-400 border border-sky-500/30'
+                          : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                      }`}>
+                        {(editableGateways.mercadoPago?.installmentsMax || 1) > 1
+                          ? `Cuotas Activas (${editableGateways.mercadoPago?.installmentsMax} cuotas)`
+                          : '✓ Solo 1 Pago Directo (Sin cuotas)'}
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setEditableGateways({
+                          ...editableGateways,
+                          mercadoPago: {
+                            ...(editableGateways.mercadoPago || {
+                              publicKey: '',
+                              accessToken: '',
+                              environment: 'production'
+                            }),
+                            installmentsMax: 1
+                          }
+                        })}
+                        className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer ${
+                          (editableGateways.mercadoPago?.installmentsMax || 1) === 1
+                            ? 'bg-emerald-500/20 border-emerald-500 text-white shadow-lg'
+                            : 'bg-[#18181B] border-white/10 text-zinc-400 hover:border-white/20'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-[10px] font-bold uppercase text-emerald-400">Recomendado</span>
+                          {(editableGateways.mercadoPago?.installmentsMax || 1) === 1 && (
+                            <span className="text-emerald-400 font-bold text-xs">✓</span>
+                          )}
+                        </div>
+                        <p className="text-xs font-bold text-white">Sin Cuotas (1 Pago)</p>
+                        <p className="text-[10px] text-zinc-400">Cobra el precio exacto publicado</p>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setEditableGateways({
+                          ...editableGateways,
+                          mercadoPago: {
+                            ...(editableGateways.mercadoPago || {
+                              publicKey: '',
+                              accessToken: '',
+                              environment: 'production'
+                            }),
+                            installmentsMax: (editableGateways.mercadoPago?.installmentsMax && editableGateways.mercadoPago.installmentsMax > 1) ? editableGateways.mercadoPago.installmentsMax : 3
+                          }
+                        })}
+                        className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer ${
+                          (editableGateways.mercadoPago?.installmentsMax || 1) > 1
+                            ? 'bg-sky-500/20 border-sky-500 text-white shadow-lg'
+                            : 'bg-[#18181B] border-white/10 text-zinc-400 hover:border-white/20'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-[10px] font-bold uppercase text-sky-400">Con Cuotas</span>
+                          {(editableGateways.mercadoPago?.installmentsMax || 1) > 1 && (
+                            <span className="text-sky-400 font-bold text-xs">✓</span>
+                          )}
+                        </div>
+                        <p className="text-xs font-bold text-white">Habilitar Cuotas</p>
+                        <p className="text-[10px] text-zinc-400">El cliente elige 3, 6 o 12 cuotas</p>
+                      </button>
+                    </div>
+
+                    {(editableGateways.mercadoPago?.installmentsMax || 1) > 1 && (
+                      <div className="pt-1">
+                        <select
+                          value={editableGateways.mercadoPago?.installmentsMax || 3}
+                          onChange={(e) => setEditableGateways({
+                            ...editableGateways,
+                            mercadoPago: {
+                              ...(editableGateways.mercadoPago || {
+                                publicKey: '',
+                                accessToken: '',
+                                environment: 'production'
+                              }),
+                              installmentsMax: Number(e.target.value)
+                            }
+                          })}
+                          className="w-full bg-[#18181B] border border-white/10 rounded-xl px-3 py-2 text-xs text-white font-mono focus:outline-none focus:border-sky-500"
+                        >
+                          <option value={3}>Hasta 3 Cuotas</option>
+                          <option value={6}>Hasta 6 Cuotas</option>
+                          <option value={12}>Hasta 12 Cuotas</option>
+                        </select>
+                      </div>
+                    )}
+
+                    <div className="p-2.5 bg-amber-500/10 border border-amber-500/20 rounded-xl text-[11px] text-amber-200/90 leading-relaxed">
+                      <strong>⚠️ Importante sobre Mercado Pago:</strong> Si habilitas cuotas sin tener un acuerdo de Cuota Simple o financiación propia en tu cuenta de Mercado Pago, Mercado Pago aplicará el recargo financiero de la tarjeta al cliente. Para garantizar que el cliente pague exactamente el precio publicado de BB IMPORT sin sorpresas ni reclamos, selecciona <strong>"Sin Cuotas (1 Pago)"</strong>.
+                    </div>
                   </div>
                 </div>
 

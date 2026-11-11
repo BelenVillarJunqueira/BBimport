@@ -146,10 +146,42 @@ app.post('/api/notify-isamer', async (req, res) => {
   }
 });
 
-// Helper to get Mercado Pago Token from environment
+// File path for persistent Mercado Pago settings on server
+const mpConfigFile = path.join(uploadsDir, 'mp_config.json');
+
+function loadPersistedMpConfig(): { accessToken?: string; publicKey?: string; mpAliasOrCvu?: string; paymentLinkUrl?: string } {
+  try {
+    if (fs.existsSync(mpConfigFile)) {
+      const raw = fs.readFileSync(mpConfigFile, 'utf-8');
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed === 'object') {
+        return parsed;
+      }
+    }
+  } catch (err) {
+    console.warn('Error reading mp_config.json:', err);
+  }
+  return {};
+}
+
+function savePersistedMpConfig(config: { accessToken?: string; publicKey?: string; mpAliasOrCvu?: string; paymentLinkUrl?: string }) {
+  try {
+    const existing = loadPersistedMpConfig();
+    const updated = { ...existing, ...config };
+    fs.writeFileSync(mpConfigFile, JSON.stringify(updated, null, 2), 'utf-8');
+  } catch (err) {
+    console.warn('Error writing mp_config.json:', err);
+  }
+}
+
+// Helper to get Mercado Pago Token from custom param, saved server config, or environment
 function getMercadoPagoToken(customToken?: string): string | null {
   if (customToken && customToken.trim().length > 10) {
     return customToken.trim();
+  }
+  const persisted = loadPersistedMpConfig();
+  if (persisted.accessToken && persisted.accessToken.trim().length > 10) {
+    return persisted.accessToken.trim();
   }
   return (
     process.env.MERCADO_PAGO_ACCESS_TOKEN ||
@@ -159,7 +191,7 @@ function getMercadoPagoToken(customToken?: string): string | null {
   );
 }
 
-// API: Check if Mercado Pago token is configured in .env or via custom token
+// API: Check Mercado Pago status and configuration
 app.get('/api/mercadopago/status', (req, res) => {
   const token = getMercadoPagoToken();
   res.json({
@@ -169,6 +201,32 @@ app.get('/api/mercadopago/status', (req, res) => {
       ? `${token.slice(0, 8)}...${token.slice(-4)}`
       : null
   });
+});
+
+// API: Get Mercado Pago configuration
+app.get('/api/mercadopago/config', (req, res) => {
+  const persisted = loadPersistedMpConfig();
+  const token = getMercadoPagoToken(persisted.accessToken);
+  res.json({
+    configured: Boolean(token && token.trim().length > 10),
+    isProduction: token ? token.startsWith('APP_USR-') : false,
+    accessToken: token || '',
+    publicKey: persisted.publicKey || process.env.VITE_MERCADO_PAGO_PUBLIC_KEY || '',
+    mpAliasOrCvu: persisted.mpAliasOrCvu || 'bbimport.mp',
+    paymentLinkUrl: persisted.paymentLinkUrl || ''
+  });
+});
+
+// API: Save Mercado Pago configuration
+app.post('/api/mercadopago/config', (req, res) => {
+  const { accessToken, publicKey, mpAliasOrCvu, paymentLinkUrl } = req.body;
+  savePersistedMpConfig({
+    ...(accessToken !== undefined ? { accessToken: String(accessToken).trim() } : {}),
+    ...(publicKey !== undefined ? { publicKey: String(publicKey).trim() } : {}),
+    ...(mpAliasOrCvu !== undefined ? { mpAliasOrCvu: String(mpAliasOrCvu).trim() } : {}),
+    ...(paymentLinkUrl !== undefined ? { paymentLinkUrl: String(paymentLinkUrl).trim() } : {})
+  });
+  return res.json({ success: true, message: 'Configuración de Mercado Pago guardada correctamente en el servidor' });
 });
 
 // API: Test Mercado Pago connection dynamically
@@ -205,9 +263,12 @@ app.post('/api/mercadopago/test-connection', async (req, res) => {
       }
     });
 
+    // If valid, persist this working token to server storage
+    savePersistedMpConfig({ accessToken: token });
+
     return res.json({
       success: true,
-      message: '¡Conexión exitosa! Las credenciales de Mercado Pago son válidas.',
+      message: '¡Conexión exitosa! Las credenciales de Mercado Pago son válidas y quedaron guardadas.',
       isProduction: token.startsWith('APP_USR-'),
       preferenceId: testPref.id
     });
@@ -223,7 +284,7 @@ app.post('/api/mercadopago/test-connection', async (req, res) => {
 // API: Create Preference Endpoint
 async function handleCreatePreference(req: express.Request, res: express.Response) {
   try {
-    const { items, payer, installments, backUrls, customToken, trackingCode, storeUrl } = req.body;
+    const { items, payer, backUrls, customToken, trackingCode, storeUrl } = req.body;
 
     const token = getMercadoPagoToken(customToken);
 
@@ -231,7 +292,7 @@ async function handleCreatePreference(req: express.Request, res: express.Respons
       return res.status(400).json({
         success: false,
         error: 'TOKEN_NOT_CONFIGURED',
-        message: 'No se encontró MERCADO_PAGO_ACCESS_TOKEN en tu archivo .env ni en la configuración.'
+        message: 'No se encontró el Access Token de Mercado Pago. Por favor ingrésalo en el Panel Administrador > Pasarelas de Pago.'
       });
     }
 
@@ -247,12 +308,14 @@ async function handleCreatePreference(req: express.Request, res: express.Respons
 
     const preference = new Preference(client);
 
+    const maxInstallments = req.body.installmentsMax ? Number(req.body.installmentsMax) : 1;
+
     const preferenceItems = (items && items.length > 0)
       ? items.map((it: any) => ({
           id: String(it.id || 'bb-prod'),
           title: String(it.title || 'Máquina Cortadora BB IMPORT'),
-          quantity: Number(it.quantity || 1),
-          unit_price: Number(it.unit_price || it.price || 29999),
+          quantity: Math.max(1, Math.round(Number(it.quantity || 1))),
+          unit_price: Math.max(1, Math.round(Number(it.unit_price || it.price || 38990))),
           currency_id: 'ARS',
           picture_url: it.picture_url || undefined,
           description: it.description || 'Producto profesional BB IMPORT'
@@ -262,12 +325,10 @@ async function handleCreatePreference(req: express.Request, res: express.Respons
             id: 'bb-prod-1',
             title: 'Máquina cortadora EXXTRA TECH BB IMPORT',
             quantity: 1,
-            unit_price: 29999,
+            unit_price: 38990,
             currency_id: 'ARS'
           }
         ];
-
-    const maxInstallments = Number(installments) || 12;
 
     const body: any = {
       items: preferenceItems,
@@ -282,7 +343,8 @@ async function handleCreatePreference(req: express.Request, res: express.Respons
         }
       },
       payment_methods: {
-        installments: maxInstallments
+        installments: maxInstallments,
+        default_installments: 1
       },
       back_urls: {
         success: backUrls?.success || `${appBaseUrl}/?status=approved&tracking=${trackingCode || ''}`,

@@ -15,7 +15,13 @@ export const initialMedia: MediaItem[] = [
     title: 'Corte y Perfilado de Alta Precisión',
     alt: 'Detalle de corte degradado y fade profesional'
   },
-
+  {
+    id: 'media-1788642092496-maao',
+    type: 'image',
+    url: '/uploads/media-1788642092496-maao.webp',
+    title: 'Cuchillas T-Blade Acero Carbono Zero-Gap',
+    alt: 'Cabezal T-Blade para corte al ras 0mm'
+  },
   {
     id: 'media-1788642063456-2sps',
     type: 'image',
@@ -87,32 +93,32 @@ export const initialVariants: ProductVariant[] = [
 export const initialBundles: BundleOffer[] = [
   {
     id: 'bundle-1',
-    title: '1x Máquina EXXTRA TECH™',
+    title: '1x Máquina EXXTRA TECH™ PRO',
     subtitle: 'Incluye Kit Completo (4 peines + cable USB + aceite + cepillo)',
     quantity: 1,
-    price: 29999,
-    originalPrice: 39999,
+    price: 38990,
+    originalPrice: 64990,
     discountPercentage: 40,
     badge: 'OFERTA INDIVIDUAL'
   },
   {
     id: 'bundle-2',
-    title: '2x Máquinas EXXTRA TECH™ (Pack Dúo)',
-    subtitle: 'El favorito de Barberos y Regalos. Ahorras $20.999 extra',
+    title: '2x Máquinas EXXTRA TECH™ PRO (Pack Dúo)',
+    subtitle: 'El favorito de Barberos y Regalos. Ahorras $49.990 extra',
     quantity: 2,
-    price: 54999,
-    originalPrice: 75999,
+    price: 64990,
+    originalPrice: 129980,
     discountPercentage: 50,
     popular: true,
-    badge: 'MEJOR VALOR ⭐ (25% OFF)'
+    badge: 'MEJOR VALOR ⭐ (50% OFF)'
   },
   {
     id: 'bundle-3',
-    title: '1x Máquina EXXTRA TECH™ + Loción post afeitado',
+    title: '1x Máquina PRO + Kit Cuchilla Cerámica Repuesto',
     subtitle: 'Cuchilla de repuesto extra de cerámica fría de por vida',
     quantity: 1,
-    price: 41999,
-    originalPrice: 59999,
+    price: 47990,
+    originalPrice: 79990,
     discountPercentage: 40,
     badge: 'COMBO PROFESIONAL'
   }
@@ -121,23 +127,23 @@ export const initialBundles: BundleOffer[] = [
 export const initialStoreContent: StoreContent = {
   storeName: 'BB IMPORT',
   tagline: 'Línea de Barbería & Peluquería Profesional',
-  topBannerText: '🚚 ENVÍOS A TODO EL PAÍS (PAGAS AL RECIBIR) | ⚡ 25% OFF HASTA AGOTAR STOCK | 🔒 COMPRA 100% GARANTIZADA',
-  productTitle: 'Máquina Cortadora y Patillera EXXTRA TECH™ EX5',
-  productSubtitle: 'Corte al ras 0mm, degradados perfectos y perfilado de barba profesional con motor magnético silencioso de 7.000 RPM. Imagenes ilustrativas. Garantía de 30 días.',
+  topBannerText: '🚚 ENVÍO GRATIS A TODO EL PAÍS (PAGAS AL RECIBIR) | ⚡ 40% OFF HASTA AGOTAR STOCK | 🔒 COMPRA 100% GARANTIZADA',
+  productTitle: 'Máquina Cortadora y Patillera EXXTRA TECH™ V2 Pro',
+  productSubtitle: 'Corte al ras 0mm, degradados perfectos y perfilado de barba profesional con motor magnético silencioso de 7.000 RPM.',
   badgeTag: 'N° 1 EN VENTAS PARA BARBEROS',
-  regularPrice: 39999,
-  salePrice: 29999,
+  regularPrice: 64990,
+  salePrice: 38990,
   currencySymbol: '$',
   currencyCode: 'ARS',
   urgencyViewers: 34,
   stockLeft: 8,
   guaranteeDays: 30,
-  guaranteeTitle: 'Garantía Blindada de 30 Días',
+  guaranteeTitle: 'Garantía Blindada de 30 Días BB IMPORT',
   guaranteeDescription: 'Prueba la EXXTRA TECH™ en tu casa o barbería. Si no supera tus expectativas de corte, potencia y duración de batería, te devolvemos el 100% de tu dinero sin preguntas.',
   shippingHeadline: 'Despacho Exprés Inmediato con Seguro de Entrega',
   shippingSubtext: 'Enviamos a cualquier rincón del país por Correo Argentino / Andreani con código de rastreo en tiempo real.',
   motorSpecs: 'Motor rotativo turbo de 7.000 RPM con tecnología de torque constante, sin frenarse en cabellos gruesos.',
-  batterySpecs: 'Batería de Iones de Litio de 1500mAh con 200 minutos de uso continuo y carga rápida USB Tipo C.',
+  batterySpecs: 'Batería de Iones de Litio de 1500mAh con 180 minutos de uso continuo y carga rápida USB Tipo C.',
   bladesSpecs: 'Cuchillas T-Blade en Acero al Carbono autoafilables con tratamiento térmico anti-calentamiento.',
   ergonomicsSpecs: 'Cuerpo aerodinámico texturizado antideslizante con hendidura ergonómica para el pulgar y luz LED indicadora.',
   boxIncludes: [
@@ -148,12 +154,12 @@ export const initialStoreContent: StoreContent = {
     '1x Frasco Gotero de Aceite Lubricante para Cuchillas',
     '1x Manual Oficial de Uso & Certificado de Garantía BB IMPORT'
   ],
-  instagramUrl: 'https://www.instagram.com/bigboss_import/',
-  instagramHandle: '@bigboss_import',
-  facebookUrl: '',
-  facebookPage: '',
-  whatsappNumber: '+54 9 3515 05-6742',
-  supportEmail: 'bigbossimportaciones@gmail.com',
+  instagramUrl: 'https://instagram.com/bbimport_oficial',
+  instagramHandle: '@bbimport_oficial',
+  facebookUrl: 'https://facebook.com/bbimport.profesional',
+  facebookPage: 'BB Import Profesional Oficial',
+  whatsappNumber: '+54 9 11 3840-2911',
+  supportEmail: 'ventas@bbimport.com.ar',
   metaPixelId: '',
   metaPixelEnabled: true
 };
@@ -171,16 +177,16 @@ export const initialOrders: Order[] = [
     items: [
       {
         productId: 'prod-1',
-        productName: 'Máquina Cortadora EXXTRA TECH™ EX5',
+        productName: 'Máquina Cortadora EXXTRA TECH™ V2 Pro',
         variantName: 'Negro Matte (Titanium Black)',
         quantity: 1,
-        price: 29999,
-        bundleTitle: '1x Máquina EXXTRA TECH™ EX5 '
+        price: 38990,
+        bundleTitle: '1x Máquina EXXTRA TECH™ PRO'
       }
     ],
-    subtotal: 29999,
+    subtotal: 38990,
     shippingCost: 0,
-    total: 29999,
+    total: 38990,
     paymentMethod: 'contra_entrega',
     paymentStatus: 'A Cobrar al Entregar',
     status: 'En Tránsito',
@@ -229,16 +235,16 @@ export const initialOrders: Order[] = [
     items: [
       {
         productId: 'prod-1',
-        productName: 'Pack Dúo 2x EXXTRA TECH™ EX5',
+        productName: 'Pack Dúo 2x EXXTRA TECH™ PRO',
         variantName: 'Rojo Carmín + Negro Matte',
         quantity: 2,
-        price: 59999,
-        bundleTitle: '2x Máquinas EXXTRA TECH™ EX5 (Pack Dúo)'
+        price: 64990,
+        bundleTitle: '2x Máquinas EXXTRA TECH™ PRO (Pack Dúo)'
       }
     ],
-    subtotal: 59999,
+    subtotal: 64990,
     shippingCost: 0,
-    total: 59999,
+    total: 64990,
     paymentMethod: 'transferencia',
     paymentStatus: 'Aprobado',
     status: 'En Reparto',
@@ -287,16 +293,16 @@ export const initialOrders: Order[] = [
     items: [
       {
         productId: 'prod-1',
-        productName: 'Máquina EXXTRA TECH™ EX5',
+        productName: 'Máquina EXXTRA TECH™ PRO',
         variantName: 'Azul Eléctrico (Deep Ocean)',
         quantity: 1,
-        price: 29999,
-        bundleTitle: '1x Máquina EXXTRA TECH™ EX5'
+        price: 38990,
+        bundleTitle: '1x Máquina EXXTRA TECH™ PRO'
       }
     ],
-    subtotal: 29999,
+    subtotal: 38990,
     shippingCost: 0,
-    total: 29999,
+    total: 38990,
     paymentMethod: 'tarjeta',
     paymentStatus: 'Aprobado',
     status: 'Entregado',
@@ -345,18 +351,18 @@ export const initialReviews: Review[] = [
   {
     id: 'rev-1',
     author: 'Martín "Tito" Barber',
-    location: 'Buenos Aires CABA',
+    location: 'Buenos Aires (Palermo)',
     rating: 5,
     date: 'Hace 2 días',
     title: 'Increíble potencia y cero tirones, la uso 8 horas al día',
     comment: 'Tengo mi barbería en Palermo y compré 2 máquinas para probarlas con los fades más exigentes. El motor vuela, corta al ras sin cortar la piel y la batería me aguanta casi 4 días con uso moderado. Excelente atención de BB IMPORT.',
     verifiedBuyer: true,
-    role: 'Barbero Profesional',
+    role: 'Barbero Profesional Certificado',
     imageUrl: '/images/review-1.jpg'
   },
   {
     id: 'rev-2',
-    author: 'Gonzalo A.',
+    author: 'Gonzalo R.',
     location: 'Córdoba Capital',
     rating: 5,
     date: 'Hace 3 días',
@@ -390,7 +396,7 @@ export const initialReviews: Review[] = [
     author: 'Agustín Pereyra',
     location: 'La Plata',
     rating: 5,
-    date: 'Hace 2 semana',
+    date: 'Hace 1 semana',
     title: 'Silenciosa y no se calienta la cuchilla',
     comment: 'Muchas patilleras baratas a los 10 minutos hierven en la piel del cliente. Esta mantiene la temperatura baja y el motor no vibra fuerte en la mano. 100% recomendada para colegas peluqueros.',
     verifiedBuyer: true,
@@ -401,7 +407,7 @@ export const initialReviews: Review[] = [
     author: 'Claudio V.',
     location: 'Neuquén',
     rating: 4,
-    date: 'Hace 1 mes',
+    date: 'Hace 2 semanas',
     title: 'Excelente máquina, el envío demoró un día más por el correo',
     comment: 'La máquina es una bestia total, tiene un filo impresionante. El correo demoró 72hs en vez de 48hs por el clima acá en el sur, pero la gente de BB IMPORT me atendió rapidísimo por WhatsApp y me pasaron el estado al instante.',
     verifiedBuyer: true
@@ -416,17 +422,17 @@ export const initialGateways: GatewaySettings = {
   mercadoPago: {
     publicKey: 'APP_USR-7a6b980c-bbimport-prod-2025',
     accessToken: '',
-    paymentLinkUrl: 'https://mpago.la/2vK8Xqp',
-    mpAliasOrCvu: 'beluula.mp',
+    paymentLinkUrl: '',
+    mpAliasOrCvu: 'bbimport.mp',
     environment: 'production',
-    installmentsMax: 12
+    installmentsMax: 1
   },
   bank: {
-    bankName: 'Banco Galicia',
-    accountHolder: 'BB IMPORT ',
-    cbu: '0070327530004092450465',
-    alias: 'rbvillar3.gal',
-    cuit: '23-37066549-4',
+    bankName: 'Banco Santander Río',
+    accountHolder: 'BB IMPORT S.R.L.',
+    cbu: '0720194888000036129841',
+    alias: 'BB.IMPORT.OFICIAL',
+    cuit: '30-71829401-9',
     instructions: 'Transfiere el monto exacto de la orden a nuestro Alias o CBU oficial. Luego envía el comprobante por WhatsApp o súbelo en el formulario para despacho prioritario.'
   }
 };
@@ -455,6 +461,6 @@ export const initialFaqs = [
   {
     id: 'faq-5',
     question: '¿Qué garantía tengo si el producto no me convence?',
-    answer: 'Cuentas con la Garantía de 30 días. Si la máquina tiene algún desperfecto o no estás 100% satisfecho con su rendimiento, te la cambiamos inmediatamente por una nueva o te reembolsamos tu dinero.'
+    answer: 'Cuentas con la Garantía BB IMPORT de 30 días. Si la máquina tiene algún desperfecto o no estás 100% satisfecho con su rendimiento, te la cambiamos inmediatamente por una nueva o te reembolsamos tu dinero.'
   }
 ];

@@ -342,17 +342,22 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
 
     if (paymentMethod === 'mercadopago') {
       try {
+        const bundleTitle = selectedBundle?.title || 'Pack Estándar';
+        const exactPrice = Math.round(Number(totalAmount));
+        const maxInstallments = Number(gateways.mercadoPago?.installmentsMax || 1);
+
         const response = await fetch('/api/mercadopago/create-preference', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             items: [
               {
-                id: selectedVariant.id || 'bb-prod-1',
-                title: `${content.productTitle} - ${selectedVariant.name} (${selectedBundle.title})`,
-                quantity: selectedBundle.quantity || 1,
-                unit_price: totalAmount,
-                picture_url: `${window.location.origin}/images/product-1.jpg`
+                id: selectedBundle?.id || selectedVariant?.id || 'bb-prod-1',
+                title: `${content.productTitle} - ${selectedVariant?.name || 'Profesional'} (${bundleTitle})`,
+                quantity: 1, // 1 paquete/combo: garantiza que Mercado Pago cobre el monto exacto mostrado en la página
+                unit_price: exactPrice,
+                picture_url: `${window.location.origin}/images/product-1.jpg`,
+                description: `Pedido ${trackingCode}: ${bundleTitle} - Color ${selectedVariant?.name || 'Clásico'}`
               }
             ],
             payer: {
@@ -362,7 +367,8 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
               address: `${trimmedAddress}, ${trimmedCity}`
             },
             trackingCode,
-            customToken: gateways.mercadoPago?.accessToken || undefined
+            customToken: gateways.mercadoPago?.accessToken || undefined,
+            installmentsMax: maxInstallments
           })
         });
 
@@ -373,17 +379,28 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
           setMpPreferenceUrl(data.initPoint);
           setMpPreferenceId(data.preferenceId);
         } else {
-          setIsSubmitting(false);
-          const errorMsg = data.error === 'TOKEN_NOT_CONFIGURED'
-            ? 'No se detectó el Access Token de Mercado Pago. Puedes configurarlo en el Panel Administrador > Pasarelas de Pago.'
-            : (data.message || 'Error al conectar con Mercado Pago. Intenta nuevamente o selecciona otro medio de pago.');
-          setFormError(errorMsg);
-          return;
+          // Si no hay token configurado pero el admin configuró un link directo manual
+          if (gateways.mercadoPago?.paymentLinkUrl && gateways.mercadoPago.paymentLinkUrl.trim().startsWith('http')) {
+            generatedMpUrl = gateways.mercadoPago.paymentLinkUrl.trim();
+            setMpPreferenceUrl(generatedMpUrl);
+          } else {
+            setIsSubmitting(false);
+            const errorMsg = data.error === 'TOKEN_NOT_CONFIGURED'
+              ? `Para cobrar el monto exacto de la orden (${formatPrice(totalAmount)}), ingresa tu Access Token de Mercado Pago en Panel Admin > Pasarelas.`
+              : (data.message || 'Error al conectar con Mercado Pago. Intenta nuevamente o selecciona otro medio de pago.');
+            setFormError(errorMsg);
+            return;
+          }
         }
       } catch (err: any) {
-        setIsSubmitting(false);
-        setFormError('Error de red al conectar con Mercado Pago. Por favor revisa tu conexión.');
-        return;
+        if (gateways.mercadoPago?.paymentLinkUrl && gateways.mercadoPago.paymentLinkUrl.trim().startsWith('http')) {
+          generatedMpUrl = gateways.mercadoPago.paymentLinkUrl.trim();
+          setMpPreferenceUrl(generatedMpUrl);
+        } else {
+          setIsSubmitting(false);
+          setFormError('Error de red al conectar con Mercado Pago. Por favor revisa tu conexión.');
+          return;
+        }
       }
     }
 
