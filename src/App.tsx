@@ -574,10 +574,7 @@ export default function App() {
         />
       )}
 
-      {/* Live Social Proof: Solo notificación de "... acaba de comprar!" */}
-      <SocialPushToast
-        isDisabled={isTrackingOpen || isCheckoutOpen || isAdminOpen}
-      />
+
 
       {/* Real-Time Order Tracking Modal */}
       <OrderTracking

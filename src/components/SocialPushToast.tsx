@@ -60,18 +60,7 @@ export const SocialPushToast: React.FC<SocialPushToastProps> = ({ isDisabled = f
           {currentSale.name.charAt(0)}
         </div>
 
-        <div className="flex-1 min-w-0 pr-1">
-          <p className="text-xs font-bold text-white flex items-center gap-1.5 truncate">
-            <span>{currentSale.name} acaba de comprar!</span>
-          </p>
-          <p className="text-[10px] text-zinc-400 truncate">
-            {currentSale.item}
-          </p>
-          <p className="text-[9px] text-amber-400/90 font-mono flex items-center gap-1 mt-0.5">
-            <span>{currentSale.time} en {currentSale.city}</span>
-            <span className="text-emerald-400 font-bold">• Verificado</span>
-          </p>
-        </div>
+
 
         <button
           type="button"

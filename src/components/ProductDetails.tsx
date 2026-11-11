@@ -109,10 +109,7 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({
           </span>
         </button>
 
-        <div className="flex items-center gap-1.5 text-xs text-amber-400/90 font-medium">
-          <Flame className="w-3.5 h-3.5 fill-amber-400" />
-          <span>{content.urgencyViewers} personas viendo ahora</span>
-        </div>
+
       </div>
 
       {/* Price & Savings Block */}
