@@ -158,7 +158,7 @@ export const initialStoreContent: StoreContent = {
   instagramHandle: '@bigboss_import',
   facebookUrl: 'https://www.facebook.com/profile.php?id=61594364275640',
   facebookPage: 'BB Import',
-  whatsappNumber: '+54 9 35156742',
+  whatsappNumber: '+54 9 3515056742',
   supportEmail: 'bigbossimportaciones@gmail.com',
   metaPixelId: '',
   metaPixelEnabled: true
@@ -423,16 +423,16 @@ export const initialGateways: GatewaySettings = {
     publicKey: 'APP_USR-7a6b980c-bbimport-prod-2025',
     accessToken: '',
     paymentLinkUrl: '',
-    mpAliasOrCvu: 'bbimport.mp',
+    mpAliasOrCvu: 'beluula.mp',
     environment: 'production',
     installmentsMax: 1
   },
   bank: {
-    bankName: 'Banco Santander Río',
-    accountHolder: 'BB IMPORT S.R.L.',
+    bankName: 'Banco Galicia',
+    accountHolder: 'BB IMPORT ',
     cbu: '0720194888000036129841',
-    alias: 'BB.IMPORT.OFICIAL',
-    cuit: '30-71829401-9',
+    alias: 'rbvillar3.gal',
+    cuit: '23/37066549/4',
     instructions: 'Transfiere el monto exacto de la orden a nuestro Alias o CBU oficial. Luego envía el comprobante por WhatsApp o súbelo en el formulario para despacho prioritario.'
   }
 };

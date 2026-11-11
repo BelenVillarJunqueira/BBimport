@@ -33,8 +33,8 @@ export const Footer: React.FC<FooterProps> = ({ content, onOpenAdmin, onOpenTrac
     }
   };
 
-  const instagramUrl = content.instagramUrl || 'https://instagram.com/bbimport_oficial';
-  const facebookUrl = content.facebookUrl || 'https://facebook.com/bbimport.profesional';
+  const instagramUrl = content.instagramUrl || 'https://www.instagram.com/bigboss_import/';
+  const facebookUrl = content.facebookUrl || 'https://www.facebook.com/profile.php?id=61594364275640';
   const whatsappUrl = `https://wa.me/${(content.whatsappNumber || '+549 3515 05-6742').replace(/\D/g, '')}?text=${encodeURIComponent('Hola BB IMPORT! Quiero consultar sobre sus máquinas cortadoras profesionales.')}`;
 
   return (

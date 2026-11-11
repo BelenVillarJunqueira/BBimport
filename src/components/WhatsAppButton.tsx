@@ -9,7 +9,7 @@ interface WhatsAppButtonProps {
 }
 
 export const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({
-  whatsappNumber = '+54 9 11 3840-2911',
+  whatsappNumber = '+54 9 3515056742',
   storeName = 'BB IMPORT',
   productTitle = 'Máquina cortadora EXXTRA TECH'
 }) => {
@@ -18,7 +18,7 @@ export const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({
   const message = encodeURIComponent(
     `¡Hola ${storeName}! 👋 Quiero consultar sobre la ${productTitle}. ¿Tienen stock para despacho inmediato?`
   );
-  const whatsappUrl = `https://wa.me/${cleanPhone || '5491138402911'}?text=${message}`;
+  const whatsappUrl = `https://wa.me/${cleanPhone || '5493515056742'}?text=${message}`;
 
   const handleClickWhatsApp = () => {
     trackMetaContact({

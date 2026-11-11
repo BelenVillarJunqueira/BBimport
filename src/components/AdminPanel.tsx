@@ -3410,7 +3410,7 @@ Cualquier consulta quedamos a tu disposición. ¡Muchas gracias por tu compra!`;
                   Herramientas Profesionales de Barbería
                 </p>
                 <p className="text-[10px] text-zinc-500">
-                  {content.whatsappNumber ? `WhatsApp: ${content.whatsappNumber}` : 'Buenos Aires, Argentina'}
+                  {content.whatsappNumber ? `WhatsApp: ${content.whatsappNumber}` : 'Córdoba, Argentina'}
                 </p>
               </div>
 
